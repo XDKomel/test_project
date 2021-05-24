@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:plane_chat/screens/main.dart';
+import 'file:///C:/Users/Dmitriy/Desktop/flightBuddyRepo/flightbuddy/lib/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

@@ -44,6 +44,8 @@ class _SignInState extends State<SignIn> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 20.0,),
+              //TODO
+              // Вынести текстовое поле в отдельный виджет, обернуть его в контейнер
               TextFormField(
                 onChanged: (val){
                   setState(() {
@@ -51,6 +53,8 @@ class _SignInState extends State<SignIn> {
                   });
                 },
               ),
+              //TODO лучше не использовать sizedbox, а использовать поле margin у
+              //TODO Container
               SizedBox(height: 20.0,),
               TextFormField(
                 obscureText: true,

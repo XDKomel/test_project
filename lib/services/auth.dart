@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:plane_chat/models/UserData.dart';
+import 'package:plane_chat/models/user_data.dart';
 import 'package:plane_chat/screens/authentication/authenticate.dart';
 import 'package:plane_chat/screens/home/home.dart';
 

@@ -46,6 +46,8 @@ class _RegisterState extends State<Register> {
                 SizedBox(height: 20.0,),
                 TextFormField(
                   validator: (val) {
+                    //TODO лучше проверять регексами правильность ввода
+
                     val!.isEmpty? 'Enter an email' : null;
                   },
                   onChanged: (val){
