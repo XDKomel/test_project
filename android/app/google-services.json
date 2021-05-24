@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "768162024167",
+    "project_id": "planechat-d8d2a",
+    "storage_bucket": "planechat-d8d2a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768162024167:android:1ba9e3adc86616502df042",
+        "android_client_info": {
+          "package_name": "com.lipsar.plane_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768162024167-lefviunuq5686fp6lb2bp375q821jfen.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lipsar.plane_chat",
+            "certificate_hash": "f7da0a4edc122b624171d7f7f9132048a05fbae9"
+          }
+        },
+        {
+          "client_id": "768162024167-0u4qveo5f57g27alr9g4r7t7vr4c118j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUvRsBMlzWd2zBQeMzZaVjlRsI2UsR2mg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768162024167-0u4qveo5f57g27alr9g4r7t7vr4c118j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
