@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:plane_chat/models/UserData.dart';
 import 'package:plane_chat/screens/authentication/authenticate.dart';
 import 'package:plane_chat/screens/home/home.dart';
+import 'package:plane_chat/services/database.dart';
 
 class AuthService{
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -22,6 +23,8 @@ class AuthService{
      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
       User? user = result.user;
+
+      await DatabaseService(uid: user!.uid).updateUserData('Name Secondname', '88005553535');
 
       return _userFromFirebaseUser(user);
     }catch(e){
