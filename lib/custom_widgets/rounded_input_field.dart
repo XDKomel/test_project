@@ -65,10 +65,9 @@ class RoundedInputField extends StatelessWidget {
             ],
             maxLines: resizable ? null : exactLines,
             onChanged: onChanged,
+
             decoration: InputDecoration(
-
               hintStyle: TextStyle(
-
                 fontWeight: FontWeight.normal,
                 color: Colors.grey,
                 fontSize: 18,

@@ -42,7 +42,10 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return loading? Loading() : Scaffold(
+    if (loading) {
+      return Loading();
+    } else {
+      return Scaffold(
       body: Container(
         padding: EdgeInsets.only(top: size.height * 0.01),
         child: SingleChildScrollView(
@@ -101,49 +104,59 @@ class _SignInState extends State<SignIn> {
                   SizedBox(
                     height: 194,
                   ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Center(
-                    child:InkWell(
-                        child: Text(
-                          constants.NOW_A_MEMBER.tr(),
-                          style: TextStyle(
-                            height: 1,
-                            fontSize: 20,
-                            color: constants.accentColor,
-                            fontFamily: "Baloo",
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                        onTap: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Register()),
-                          );
-                        }),
-                  ),
-                ),
-                  if (isError)
-                    Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          margin: EdgeInsets.only(top: 15, left: 23, right: 23),
-                          child: Text(errorLabel,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: "Baloo",
-                                color: Colors.orange,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                              )),
-                        )),
+
 
                   Spacer(),
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(bottom: 15, left: 23, right: 23),
+                    child: Center(
+                      child:InkWell(
+                          child: Text(
+                            constants.NOW_A_MEMBER.tr(),
+                            style: TextStyle(
+                              height: 1,
+                              fontSize: 20,
+                              color: constants.accentColor,
+                              fontFamily: "Baloo",
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          onTap: () async {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Register()),
+                            );
+                          }),
+                    ),
+                  ),
+                    Visibility(
+                      visible: isError,
+                      maintainState: true,
+                      maintainAnimation: true,
+                      maintainSize: true,
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 15, left: 23, right: 23),
+                            child: Text(errorLabel,
+                                textAlign: TextAlign.center,
+
+                                style: TextStyle(
+                                  fontFamily: "Baloo",
+                                  color: Colors.orange,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                )),
+                          )),
+                    ),
+
                   Container(
                     margin: EdgeInsets.only(left: 23, right: 23, bottom: 21),
                     child: RoundedButton(
                       text: constants.LOG_IN.tr(),
                       textColor: Colors.white,
+                      textSize: 20,
                       press: () async {
                         errorLabel = "";
                         if(mounted){
@@ -182,7 +195,7 @@ class _SignInState extends State<SignIn> {
                             }
 
                           } else {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => Home()),
                             );
@@ -192,12 +205,12 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
 
-
                 ],
               ),
             )),
       ),
     );
+    }
   }
 
   bool validateEmail(String email) {

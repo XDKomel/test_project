@@ -166,18 +166,20 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           onTap: () async {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => SignIn()),
                             );
                           }),
                     ),
                   ),
+
+                  Spacer(),
                   if (isError)
                     Align(
                         alignment: Alignment.center,
                         child: Container(
-                          margin: EdgeInsets.only(top: 15, left: 23, right: 23),
+                          margin: EdgeInsets.only(bottom: 15, left: 23, right: 23),
                           child: Text(errorLabel,
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -188,12 +190,12 @@ class _RegisterState extends State<Register> {
                               )),
                         )),
 
-                  Spacer(),
                   Container(
                     margin: EdgeInsets.only(left: 23, right: 23, bottom: 21),
                     child: RoundedButton(
                       text: constants.SIGN_UP.tr(),
                       textColor: Colors.white,
+                      textSize: 20,
                       press: () async {
                         errorLabel = "";
                         if(mounted){
@@ -202,8 +204,9 @@ class _RegisterState extends State<Register> {
                           });
                         }
 
-
-                        if (!validateEmail(email)) {
+                        if(!validateName(nameSurname)){
+                          errorLabel = constants.INCORRECT_NAME.tr();
+                        }else if (!validateEmail(email)) {
                           errorLabel = constants.INCORRECT_EMAIL.tr();
                         } else if (!validatePassword(password)) {
                           errorLabel = constants.INCORRECT_PASSWORD.tr();
@@ -234,7 +237,7 @@ class _RegisterState extends State<Register> {
                             }
 
                           } else {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => Home()),
                             );
@@ -243,21 +246,6 @@ class _RegisterState extends State<Register> {
                       },
                     ),
                   ),
-
-                  // RoundedButton(
-                  //   textColor: constants.accentColor,
-                  //   color: Colors.white,
-                  //   textSize: 14,
-                  //   text: constants.SIGN_UP.tr(),
-                  //   press: (){
-                  //     Navigator.pop(context, MaterialPageRoute(
-                  //         builder: (context) => Authenticate()
-                  //     )
-                  //     );
-                  //   },
-                  //
-                  //
-                  // ),
                 ],
               ),
             )),
@@ -267,26 +255,28 @@ class _RegisterState extends State<Register> {
 
   }
   Widget privacyPolicyLinkAndTermsOfService() {
-    return Container(
-      alignment: Alignment.center,
-      //padding: EdgeInsets.all(10),
-      child: Center(
-        child:InkWell(
-            child: Text(
-              constants.POLICY_AGREEMENT.tr(),
-              style: TextStyle(
-                height: 1,
-                fontSize: 20,
-                color: Colors.black,
-                fontFamily: "Baloo",
-                decoration: TextDecoration.underline,
+    return Flexible(
+      child: Container(
+        alignment: Alignment.center,
+        //padding: EdgeInsets.all(10),
+        child: Center(
+          child:InkWell(
+              child: Text(
+                constants.POLICY_AGREEMENT.tr(),
+                style: TextStyle(
+                  height: 1,
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontFamily: "Baloo",
+                  decoration: TextDecoration.underline,
+                ),
               ),
-            ),
-            onTap: () async {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Tap'),
-              ));
-            }),
+              onTap: () async {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Tap'),
+                ));
+              }),
+        ),
       ),
     );
   }

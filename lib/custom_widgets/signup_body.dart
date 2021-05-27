@@ -116,20 +116,6 @@ class _SignUpBody extends State<SignUpBody> {
                     current: nodes[2],
                     next: nodes[3]),
               ),
-              // RoundedPasswordField(
-              //
-              //   hintText: "repeat password".tr(),
-              //   keyboard: TextInputType.visiblePassword,
-              //   width: 0.85,
-              //   maxHeight: 0.07,
-              //   maxCharacters: 30,
-              //     current: nodes[3],
-              //
-              //   onChanged: (password){
-              //
-              //     this.confPassword = password;
-              //   },
-              // ),
               SizedBox(
                 height: 5,
               ),
@@ -162,7 +148,7 @@ class _SignUpBody extends State<SignUpBody> {
                 Align(
                     alignment: Alignment.center,
                     child: Container(
-                      margin: EdgeInsets.only(top: 15, left: 23, right: 23),
+                      margin: EdgeInsets.only(top: 30, left: 23, right: 23),
                       child: Text(errorLabel,
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -228,21 +214,6 @@ class _SignUpBody extends State<SignUpBody> {
                   },
                 ),
               ),
-
-              // RoundedButton(
-              //   textColor: constants.accentColor,
-              //   color: Colors.white,
-              //   textSize: 14,
-              //   text: constants.SIGN_UP.tr(),
-              //   press: (){
-              //     Navigator.pop(context, MaterialPageRoute(
-              //         builder: (context) => Authenticate()
-              //     )
-              //     );
-              //   },
-              //
-              //
-              // ),
             ],
           ),
         )),
@@ -260,7 +231,7 @@ class _SignUpBody extends State<SignUpBody> {
               constants.POLICY_AGREEMENT.tr(),
               style: TextStyle(
                 height: 1,
-                fontSize: 20,
+                fontSize: 10,
                 color: Colors.black,
                 fontFamily: "Baloo",
                 decoration: TextDecoration.underline,
