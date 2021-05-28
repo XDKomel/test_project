@@ -21,6 +21,13 @@ const String HUMAN = "человек";
 const String HUMANS = "человека";
 const String PROFILE = "Профиль";
 const String LOG_OUT = "Выйти";
+const String TYPE_FLIGHT_ID = "Введите номер рейса";
+const String FLIGHT_ID_EXAMPLE = "Пример: 4D 729";
+const String CONTINUE = "Далее";
+const String NO_FLIGHTS = "Кажется, Ваш список полетов пуст :( \nДобавьте новый, нажав на синюю кнопку";
+
+
+
 
 
 

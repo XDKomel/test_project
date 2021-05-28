@@ -18,6 +18,7 @@ class RoundedInputField extends StatelessWidget {
   final TextInputType? keyboard;
   final double maxHeight;
   final int maxCharacters;
+  final TextAlign? textAlign;
   const RoundedInputField({
     Key? key,
     this.hintText,
@@ -31,6 +32,7 @@ class RoundedInputField extends StatelessWidget {
     this.width = 0.8,
     this.maxHeight = 0.1,
     this.maxCharacters = 50,
+    this.textAlign,
   }) : super(key: key);
 
   @override
@@ -65,6 +67,8 @@ class RoundedInputField extends StatelessWidget {
             ],
             maxLines: resizable ? null : exactLines,
             onChanged: onChanged,
+
+            textAlign: textAlign ?? TextAlign.start,
 
             decoration: InputDecoration(
               hintStyle: TextStyle(

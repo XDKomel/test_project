@@ -18,13 +18,13 @@ class AuthService{
 
   Stream<User?> get authState => _auth.idTokenChanges();
 
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(String email, String password, String name) async {
     try{
      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
       User? user = result.user;
 
-      await DatabaseService(uid: user!.uid).updateUserData('Name Secondname', '88005553535');
+      await DatabaseService(uid: user!.uid).updateUserData(name, email);
 
       return _userFromFirebaseUser(user);
     }catch(e){

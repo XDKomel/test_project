@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:plane_chat/custom_widgets/rounded_button.dart';
 import 'package:plane_chat/custom_widgets/rounded_input_field.dart';
 import 'package:plane_chat/custom_widgets/rounded_password_field.dart';
-import 'package:plane_chat/custom_widgets/signup_body.dart';
 import 'package:plane_chat/screens/authentication/sign_in.dart';
 import 'package:plane_chat/screens/home/home.dart';
 import 'package:plane_chat/services/auth.dart';
@@ -221,7 +220,7 @@ class _RegisterState extends State<Register> {
                           }
 
                           dynamic result = await _auth.registerWithEmailAndPassword(
-                              email, password);
+                              email, password, nameSurname);
                           if(mounted){
                             setState(() {
                                 loading = false;

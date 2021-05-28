@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:plane_chat/custom_widgets/flight_card.dart';
 import 'package:plane_chat/screens/authentication/authenticate.dart';
 import 'package:plane_chat/screens/authentication/sign_in.dart';
+import 'package:plane_chat/screens/home/add_flight.dart';
 import 'package:plane_chat/screens/home/flight_list.dart';
 import 'package:plane_chat/screens/home/profile.dart';
 import 'package:plane_chat/services/FlightData.dart';
@@ -24,87 +25,55 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // return StreamProvider<List<FlightData>?>.value(
-    //     value: DatabaseService().users,
-    //     initialData: null,
-    //     child: FlightList()
-    // );
-
+    // bool isEmpty = false;
+    // FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(uid)
+    //     .collection("flights")
+    //     .snapshots().isEmpty.then((value) {
+    //       setState(() {
+    //         isEmpty = value;
+    //       });
+    // });
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            'FlightBuddy',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: constants.accentColor,
-          elevation: 0.0,
-          actions: <Widget>[
-            TextButton.icon(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Profile()),
-                  );
-                },
-                label: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                icon: Text(
-                    constants.PROFILE,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15
-                  ),
-                ))
-          ],
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          'FlightBuddy',
+          style: TextStyle(color: Colors.white),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-          },
-          child: const Icon(Icons.add),
-          backgroundColor: constants.accentColor,
-        ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(uid)
-              .collection("flights")
-              .snapshots(),
-          builder: (context, userSnapshot) {
-            return userSnapshot.hasData
-                ? ListView.builder(
-                    padding: const EdgeInsets.only(
-                        right: 10, left: 10, top: 24, bottom: 10),
-                    itemCount: userSnapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot flightData =
-                          userSnapshot.data!.docs[index];
-                      String id = flightData['id'];
-                      return InkWell(
-                          child: FlightCard(id: id),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => FlightChat()),
-                          );
-                        },
-                      );
-                    })
-                : Center(
-                    child: CircularProgressIndicator(),
-                  );
-          },
-        ));
-  }
-
-  Future<DocumentSnapshot> getFlights(String flightId) async {
-    return await FirebaseFirestore.instance
-        .collection('flights')
-        .doc(flightId)
-        .get();
+        backgroundColor: constants.accentColor,
+        elevation: 0.0,
+        actions: <Widget>[
+          TextButton.icon(
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Profile()),
+                );
+              },
+              label: Icon(
+                Icons.person,
+                color: Colors.white,
+                size: 30,
+              ),
+              icon: Text(
+                constants.PROFILE,
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ))
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddFlight()),
+          );
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: constants.accentColor,
+      ),
+      body:  FlightList(),
+    );
   }
 }
