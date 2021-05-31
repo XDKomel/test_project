@@ -55,7 +55,7 @@ class _FlightListState extends State<FlightList> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => FlightChat()),
+                            builder: (context) => FlightChat(streamId: id,)),
                       );
                     },
                   );

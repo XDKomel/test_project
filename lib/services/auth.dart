@@ -8,13 +8,13 @@ import 'package:plane_chat/services/database.dart';
 class AuthService{
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  UserData? _userFromFirebaseUser(User? user){
-    return user!=null? UserData(uid: user.uid): null;
-  }
-  Stream<UserData?> get user {
-    return _auth.authStateChanges()
-        .map(_userFromFirebaseUser);
-  }
+  // UserData? _userFromFirebaseUser(User? user){
+  //   return user!=null? UserData(uid: user.uid): null;
+  // }
+  // Stream<UserData?> get user {
+  //   return _auth.authStateChanges()
+  //       .map(_userFromFirebaseUser);
+  // }
 
   Stream<User?> get authState => _auth.idTokenChanges();
 
@@ -26,7 +26,7 @@ class AuthService{
 
       await DatabaseService(uid: user!.uid).updateUserData(name, email);
 
-      return _userFromFirebaseUser(user);
+      return user;
     }catch(e){
       print(e.toString());
       return null;

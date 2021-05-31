@@ -51,6 +51,7 @@ class RoundedInputField extends StatelessWidget {
             controller: controller ,
             keyboardType: keyboard,
             focusNode: current,
+            textAlign: textAlign ?? TextAlign.start,
 
 
             textInputAction: TextInputAction.next,
@@ -68,7 +69,6 @@ class RoundedInputField extends StatelessWidget {
             maxLines: resizable ? null : exactLines,
             onChanged: onChanged,
 
-            textAlign: textAlign ?? TextAlign.start,
 
             decoration: InputDecoration(
               hintStyle: TextStyle(

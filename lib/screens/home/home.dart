@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plane_chat/custom_widgets/chat_widget.dart';
 import 'package:plane_chat/custom_widgets/flight_card.dart';
+import 'package:plane_chat/models/SessionKeeper.dart';
+import 'package:plane_chat/models/UserData.dart';
 import 'package:plane_chat/screens/authentication/authenticate.dart';
 import 'package:plane_chat/screens/authentication/sign_in.dart';
 import 'package:plane_chat/screens/home/add_flight.dart';
@@ -25,17 +28,36 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // bool isEmpty = false;
-    // FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc(uid)
-    //     .collection("flights")
-    //     .snapshots().isEmpty.then((value) {
-    //       setState(() {
-    //         isEmpty = value;
-    //       });
-    // });
-    return Scaffold(
+    FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) async {
+      SessionKeeper.user = UserData(uid: FirebaseAuth.instance.currentUser!.uid, name: value.get('name'));
+    });
+
+    return
+    //   Scaffold(
+    //     resizeToAvoidBottomInset: false,
+    //     appBar: AppBar(
+    //       title: Text(
+    //         '',
+    //         style: TextStyle(color: Colors.white),
+    //       ),
+    //       backgroundColor: Colors.white,
+    //       elevation: 0.0,
+    //       leading: IconButton(
+    //         icon: Icon(
+    //           Icons.arrow_back_ios,
+    //           color: constants.accentColor,
+    //         ),
+    //         onPressed: () {
+    //           Navigator.pop(context);
+    //         },
+    //       ),
+    //     ),
+    //     backgroundColor: Colors.white,
+    //     body: FlightChat()
+    // );
+
+
+      Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(

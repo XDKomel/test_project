@@ -23,10 +23,13 @@ class RoundedPasswordField extends StatefulWidget{
   final TextInputType? keyboard;
   final double maxHeight;
   final int maxCharacters;
+  final TextAlign? textAlign;
+
 
   const RoundedPasswordField({
     Key? key,
     this.hintText,
+    this.textAlign,
     this.next,
     this.current,
     this.keyboard,
@@ -68,8 +71,11 @@ class _RoundedPasswordField extends State<RoundedPasswordField> {
    TextInputType? keyboard;
    double maxHeight;
    int maxCharacters;
+   final TextAlign? textAlign;
+
 
    _RoundedPasswordField({
+     this.textAlign,
     required this.key,
     required this.hintText,
     required this.next,
@@ -102,6 +108,7 @@ class _RoundedPasswordField extends State<RoundedPasswordField> {
             obscureText: hidden,
             keyboardType: keyboard,
             focusNode: current,
+            textAlign: textAlign ?? TextAlign.start,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (term){
               _fieldFocusChange(context,current!,next!);

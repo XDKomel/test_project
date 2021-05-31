@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:plane_chat/custom_widgets/rounded_button.dart';
@@ -80,6 +82,7 @@ class _RegisterState extends State<Register> {
                     margin: EdgeInsets.symmetric(horizontal: 23),
                     child: RoundedInputField(
                         hintText: constants.NAME.tr(),
+                        //textAlign: TextAlign.center,
                         onChanged: (name) {
                           nameSurname = name;
                         },
@@ -95,6 +98,7 @@ class _RegisterState extends State<Register> {
                     margin: EdgeInsets.symmetric(horizontal: 23),
                     child: RoundedInputField(
                         hintText: constants.EMAIL.tr(),
+                        //textAlign: TextAlign.center,
                         keyboard: TextInputType.emailAddress,
                         width: 0.85,
                         maxHeight: 0.07,
@@ -109,6 +113,7 @@ class _RegisterState extends State<Register> {
                     margin: EdgeInsets.symmetric(horizontal: 23),
                     child: RoundedPasswordField(
                         hintText: constants.PASSWORD.tr(),
+                        //textAlign: TextAlign.center,
                         keyboard: TextInputType.visiblePassword,
                         width: 0.85,
                         maxHeight: 0.07,
@@ -140,8 +145,6 @@ class _RegisterState extends State<Register> {
                                     hoverColor: constants.accentColor,
                                     onChanged: (state) {
                                       checkedValue = state!;
-
-                                      setState(() {});
                                     }),
                               )),
                           privacyPolicyLinkAndTermsOfService()
@@ -219,7 +222,7 @@ class _RegisterState extends State<Register> {
                             });
                           }
 
-                          dynamic result = await _auth.registerWithEmailAndPassword(
+                          User result = await _auth.registerWithEmailAndPassword(
                               email, password, nameSurname);
                           if(mounted){
                             setState(() {
@@ -236,6 +239,16 @@ class _RegisterState extends State<Register> {
                             }
 
                           } else {
+                            FirebaseFirestore.instance.collection('users').doc(result.uid).collection("flights").doc('AB 1234').set({
+                              'id': 'AB 1234',
+                            });
+                            FirebaseFirestore.instance.collection('users').doc(result.uid).collection("flights").doc('BM 2345').set({
+                              'id': 'BM 2345',
+                            });
+                            FirebaseFirestore.instance.collection('users').doc(result.uid).set({
+                              'email': email,
+                              'name': nameSurname
+                            });
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => Home()),

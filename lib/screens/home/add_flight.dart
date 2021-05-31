@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:plane_chat/custom_widgets/rounded_button.dart';
 import 'package:plane_chat/custom_widgets/rounded_input_field.dart';
 import 'package:plane_chat/custom_widgets/rounded_password_field.dart';
 import 'package:plane_chat/screens/authentication/register.dart';
+import 'package:plane_chat/screens/home/flight_chat.dart';
 import 'package:plane_chat/screens/home/home.dart';
 import 'package:plane_chat/services/auth.dart';
 import 'package:plane_chat/shared/loading.dart';
@@ -20,6 +22,7 @@ class _AddFlightState extends State<AddFlight> {
   final AuthService _auth = AuthService();
 
   String flightId = "";
+  String errorLabel = "";
   bool isError = false;
 
   bool loading = false;
@@ -88,6 +91,21 @@ class _AddFlightState extends State<AddFlight> {
           ),
 
           Spacer(),
+          if (isError)
+            Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 15, left: 23, right: 23),
+                  child: Text(
+                  errorLabel,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "Baloo",
+                        color: Colors.orange,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      )),
+                )),
 
           Container(
             margin: EdgeInsets.only(left: 23, right: 23, bottom: 21),
@@ -95,7 +113,29 @@ class _AddFlightState extends State<AddFlight> {
               text: constants.CONTINUE.tr(),
               textColor: Colors.white,
               textSize: 20,
-              press: () async {},
+              press: () async {
+                try {
+                  await FirebaseFirestore.instance.collection('flights').doc(
+                      flightId).get().then((document) {
+                    if (document.exists) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FlightChat(streamId: flightId,)),
+                      );
+                    } else {
+                      setState(() {
+                        errorLabel = constants.FLIGHT_NOT_FOUND;
+                        isError = true;
+                      });
+                    }
+                  });
+                }catch(e){
+                  setState(() {
+                    errorLabel = constants.TYPE_FLIGHT_ID;
+                    isError = true;
+                  });
+                }
+              },
             ),
           ),
         ],
@@ -104,4 +144,6 @@ class _AddFlightState extends State<AddFlight> {
       ),
     );
   }
+
+
 }

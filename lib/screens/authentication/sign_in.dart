@@ -76,6 +76,7 @@ class _SignInState extends State<SignIn> {
                     margin: EdgeInsets.symmetric(horizontal: 23),
                     child: RoundedInputField(
                         hintText: constants.EMAIL.tr(),
+                        //textAlign: TextAlign.center,
                         keyboard: TextInputType.emailAddress,
                         width: 0.85,
                         maxHeight: 0.07,
@@ -90,6 +91,7 @@ class _SignInState extends State<SignIn> {
                     margin: EdgeInsets.symmetric(horizontal: 23),
                     child: RoundedPasswordField(
                         hintText: constants.PASSWORD.tr(),
+                        //textAlign: TextAlign.center,
                         keyboard: TextInputType.visiblePassword,
                         width: 0.85,
                         maxHeight: 0.07,
