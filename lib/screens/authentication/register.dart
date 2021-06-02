@@ -144,7 +144,9 @@ class _RegisterState extends State<Register> {
                                     activeColor: constants.accentColor,
                                     hoverColor: constants.accentColor,
                                     onChanged: (state) {
-                                      checkedValue = state!;
+                                      setState(() {
+                                        checkedValue = state!;
+                                      });
                                     }),
                               )),
                           privacyPolicyLinkAndTermsOfService()

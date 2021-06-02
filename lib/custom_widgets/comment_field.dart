@@ -784,7 +784,6 @@ class _CommentField extends State<CommentField> {
 
       counterRef.update({'count': FieldValue.increment(1)});
 
-
       print("NAME " + streamId!);
 
       FirebaseFirestore.instance.runTransaction((transaction) async {

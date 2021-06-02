@@ -11,7 +11,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:plane_chat/models/SessionKeeper.dart';
 import 'package:plane_chat/models/authorities.dart';
 
-String streamID='';
+String streamID = '';
 
 class CommentField extends StatefulWidget {
   List<String> initBanMessage;
@@ -63,11 +63,24 @@ class _CommentField extends State<CommentField> {
   @override
   void initState() {
     streamID = this.streamId!;
+    listScrollController.addListener(_scrollListener);
   }
 
   late Dialog banUserDialog;
   late Dialog banMessageDialog;
   late Dialog banComplaintDialog;
+  int _limit = 20;
+  int _limitIncrement = 20;
+
+  _scrollListener() {
+    if (listScrollController.offset >=
+        listScrollController.position.maxScrollExtent &&
+        !listScrollController.position.outOfRange) {
+      setState(() {
+        _limit += _limitIncrement;
+      });
+    }
+  }
 
   void showComplaintUserDialog({required BuildContext context,
     required String uid,
@@ -156,11 +169,11 @@ class _CommentField extends State<CommentField> {
 
 
   void showBanUserDialog({required BuildContext context,
-     String? uid,
+    String? uid,
 
-     String? streamId,
-     String? adminEmail,
-     String? userEmail}) {
+    String? streamId,
+    String? adminEmail,
+    String? userEmail}) {
     banUserDialog = Dialog(
       shape: RoundedRectangleBorder(
 
@@ -253,10 +266,10 @@ class _CommentField extends State<CommentField> {
   void showBanMessageDialog({required BuildContext context,
     String? uid,
     List<String>? banUsers,
-     String? streamId,
-     String? adminEmail,
-     String? userEmail,
-     String? messageId}) {
+    String? streamId,
+    String? adminEmail,
+    String? userEmail,
+    String? messageId}) {
     banMessageDialog = Dialog(
       shape: RoundedRectangleBorder(
 
@@ -343,23 +356,17 @@ class _CommentField extends State<CommentField> {
 
     //print("List: "+SessionKeeper.user.authorities.toString());
     return Container(
-
         width: double.infinity,
         alignment: Alignment.centerRight,
-
         child: WillPopScope(
-
           onWillPop: () async {
             await Future.delayed(Duration(seconds: 1));
             return Future.error('Error from return');
           },
           child: Stack(
-
             alignment: Alignment.centerRight,
             children: <Widget>[
-
               Column(
-
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -376,7 +383,8 @@ class _CommentField extends State<CommentField> {
                           stream: FirebaseFirestore.instance
                               .collection('streams').doc(streamId).collection(
                               'messages')
-                              .orderBy('time', descending: false)
+                              .orderBy('time', descending: true)
+                              .limit(_limit)
                               .snapshots(),
 
                           builder: (context, snapshot) {
@@ -410,7 +418,7 @@ class _CommentField extends State<CommentField> {
                                 //messageList.add(element);
 
                               });
-                              messageList = List.from(messageList.reversed);
+                              //messageList = List.from(messageList.reversed);
                               // double height = size.height * 0.925 - 144 -
                               //     (9.0 / 16.0) * size.width;
                               return Container(
@@ -490,8 +498,7 @@ class _CommentField extends State<CommentField> {
           if(uid != SessionKeeper.user.uid)Container(
             margin: EdgeInsets.only(right: 5),
             width: 35,
-            height: 35
-            ,
+            height: 35,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2),
@@ -523,8 +530,9 @@ class _CommentField extends State<CommentField> {
                         name,
                         textAlign: TextAlign.right,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                            color: (uid != SessionKeeper.user.uid)? Color(0xff7C7C7C) : Colors.white, fontSize: 14),
+                            fontWeight: FontWeight.bold,
+                            color: (uid != SessionKeeper.user.uid) ? Color(
+                                0xff7C7C7C) : Colors.white, fontSize: 16),
                       ),
 
                       if(uid != SessionKeeper.user.uid)Container(
@@ -575,7 +583,6 @@ class _CommentField extends State<CommentField> {
 
                               PopupMenuItem<String>(
                                 height: 25,
-
                                 value: "Complaint",
                                 child: Container(
                                     width: 120,
@@ -588,7 +595,6 @@ class _CommentField extends State<CommentField> {
                               ),
                               PopupMenuItem<String>(
                                 height: 25,
-
                                 value: "Ban",
                                 child: Container(
                                     width: 120,
@@ -629,14 +635,17 @@ class _CommentField extends State<CommentField> {
                         child: Flexible(child: Text(
 
                           document.get('content'),
-                          style: TextStyle(color: (uid != SessionKeeper.user.uid)? Colors.black : Colors.white,
-                              fontSize: 18,
+                          style: TextStyle(color: (uid != SessionKeeper.user
+                              .uid) ? Colors.black : Colors.white,
+                              fontSize: 20,
                               fontWeight: FontWeight.normal),
                         ))),
                     //if((uid!=SessionKeeper.user.uid))
                     Text(
                       timeLabel,
-                      style: TextStyle(color: (uid != SessionKeeper.user.uid)? Color(0xff7C7C7C) : Colors.white, fontSize: 10),
+                      style: TextStyle(
+                          color: (uid != SessionKeeper.user.uid) ? Color(
+                              0xff7C7C7C) : Colors.white, fontSize: 10),
                     ),
 
                   ],
@@ -649,7 +658,9 @@ class _CommentField extends State<CommentField> {
             width: 240.0,
 
             decoration: BoxDecoration(
-                color: (uid != SessionKeeper.user.uid)? Color(0xffF4F4F6) : constants.accentColor,
+                color: (uid != SessionKeeper.user.uid)
+                    ? Color(0xffF4F4F6)
+                    : constants.accentColor,
                 borderRadius: BorderRadius.circular(12.0)),
             margin: EdgeInsets.only(
               bottom: 10.0,
@@ -692,73 +703,82 @@ class _CommentField extends State<CommentField> {
 
         children: [
 
-          Container(
-
-            child: Row(
-              children: <Widget>[
-
-
-                Flexible(
-
-                  child: Container(
+    Container(
+  constraints: BoxConstraints(
+    minHeight: 50, maxHeight: 300),
+    child: Row(
+    children: <Widget>[
 
 
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.only(left: 10),
+    Expanded(
 
-                    child: TextField(
-                      keyboardType: TextInputType.text,
-                      onSubmitted: (value) {
-                        //onSendMessage(textEditingController.text, 0);
-                      },
-
-                      style: TextStyle(
-                          color: Colors.black, fontSize: 14.0),
-                      controller: textEditingController,
-                      decoration: InputDecoration.collapsed(
-
-                        hintText: "Отправить сообщение",
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                      ),
-                      focusNode: focusNode,
-                    ),
-                  ),
-                ),
+    child: Container(
 
 
-              ],
-            ),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(35)),
-                border: Border.all(color: Colors.grey, width: 0.5),
-                color: Colors.white),
-            width: size.width * 0.75,
-            margin: EdgeInsets.all(10),
-            height: 50.0,
+    margin: EdgeInsets.all(10),
+      padding: EdgeInsets.only(left: 10),
 
-          ),
-          Material(
-            child: Container(
+      child: TextField(
+          keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.newline,
 
-              padding: EdgeInsets.only(right: 2),
-              alignment: Alignment.center,
-              child: IconButton(
-                icon: Icon(Icons.send_outlined),
-                iconSize: 20,
-                onPressed: () => onSendMessage(textEditingController.text, 0),
-                color: Colors.white,
-              ),
-              decoration: BoxDecoration(
+        onSubmitted: (value) {
+            //onSendMessage(textEditingController.text, 0);
+          },
+        minLines: 1,
+        maxLines: 10,
+        style: TextStyle(
+          color: Colors.black, fontSize: 14.0),
+      controller: textEditingController,
+      decoration: InputDecoration.collapsed(
 
-                  borderRadius: BorderRadius.all(Radius.circular(60)),
-                  border: Border.all(color: Colors.transparent, width: 0.5),
-                  color: constants.accentColor),
+        hintText: "Отправить сообщение",
+        hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+      ),
+      focusNode: focusNode,
+    ),
+    ),
+    ),
 
-            ),
-            color: Colors.transparent,
-          ),
 
-        ]));
+    ],
+    ),
+    decoration: BoxDecoration(
+    borderRadius: BorderRadius.all(Radius.circular(35)),
+    border: Border.all(color: Colors.grey, width: 0.5),
+    color: Colors.white),
+    width: size.width * 0.75,
+    margin: EdgeInsets.all(10),
+
+    ),
+    Material(
+    borderRadius: BorderRadius.circular(20),
+    child: InkWell(
+    child: Container(
+
+    padding: EdgeInsets.only(right: 2),
+    alignment: Alignment.center,
+    child: IconButton(
+    icon: Icon(Icons.send_outlined),
+    iconSize: 20,
+    onPressed: () => onSendMessage(textEditingController.text, 0),
+    color: Colors.white,
+    ),
+    decoration: BoxDecoration(
+
+    borderRadius: BorderRadius.all(Radius.circular(60)),
+    border: Border.all(color: Colors.transparent, width: 0.5),
+    color: constants.accentColor),
+
+    ),
+    ),
+    color: Colors.transparent,
+    )
+    ,
+
+    ]
+    )
+    );
   }
 
   void onSendMessage(String content, int type) {
@@ -809,58 +829,58 @@ class _CommentField extends State<CommentField> {
   }
 
 
-Future<void> banUser({ String? userId,  String? streamId}) async {
-  if (!SessionKeeper.user.authorities.contains(Authority.ADMIN)) {
-    var documentReference = FirebaseFirestore.instance.collection('streams')
-        .doc(streamId)
-        .collection('blacklist')
-        .doc('local').collection('users')
-        .doc(SessionKeeper.user.uid)
-        .collection('banned_users')
-        .doc(DateTime
-        .now()
-        .millisecondsSinceEpoch
-        .toString());
+  Future<void> banUser({ String? userId, String? streamId}) async {
+    if (!SessionKeeper.user.authorities.contains(Authority.ADMIN)) {
+      var documentReference = FirebaseFirestore.instance.collection('streams')
+          .doc(streamId)
+          .collection('blacklist')
+          .doc('local').collection('users')
+          .doc(SessionKeeper.user.uid)
+          .collection('banned_users')
+          .doc(DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString());
 
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      transaction.set(
-        documentReference,
-        {
-          'uid': userId
-        },
-      );
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        transaction.set(
+          documentReference,
+          {
+            'uid': userId
+          },
+        );
+      });
+      print(documentReference.toString());
+    } else {
+      var documentReference = FirebaseFirestore.instance.collection('streams')
+          .doc(streamId)
+          .collection('blacklist')
+          .doc('global').collection('banned_users')
+
+          .doc(DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString());
+
+      //await APIRequests().changeUserAccess(this.token, userId);
+
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        transaction.set(
+          documentReference,
+          {
+            'uid': userId
+          },
+        );
+      });
+      print(documentReference.toString());
+    }
+
+    banUsers.add(userId!);
+    setState(() {
+
     });
-    print(documentReference.toString());
-  } else {
-    var documentReference = FirebaseFirestore.instance.collection('streams')
-        .doc(streamId)
-        .collection('blacklist')
-        .doc('global').collection('banned_users')
-
-        .doc(DateTime
-        .now()
-        .millisecondsSinceEpoch
-        .toString());
-
-    //await APIRequests().changeUserAccess(this.token, userId);
-
-
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      transaction.set(
-        documentReference,
-        {
-          'uid': userId
-        },
-      );
-    });
-    print(documentReference.toString());
   }
-
-  banUsers.add(userId!);
-  setState(() {
-
-  });
-}
 
 //bans only one message from user
   Future<void> banMessage(String userId, String messageId) async {

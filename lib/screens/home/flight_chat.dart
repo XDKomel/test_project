@@ -16,37 +16,59 @@ class FlightChat extends StatefulWidget {
 
 class _FlightChatState extends State<FlightChat> {
   final String streamId;
+  List<String> initBanUsers = [];
+  List<String> initBanMessage = [];
+  int num_of_people=0;
+
   _FlightChatState({required this.streamId});
-  @override
-  Widget build(BuildContext context) {
-    List<String> initBanUsers = [];
+  void queryBanUsers() async {
     FirebaseFirestore.instance.collection('streams')
         .doc(streamId)
         .collection('blacklist')
         .doc('local').collection('users')
         .doc(SessionKeeper.user.uid)
-        .collection('banned_users').get().then((value) {
-       value.docs.forEach((element) {
-         initBanUsers.add(element.get('uid'));
-       });
+        .collection('banned_users').snapshots().listen((snapshot) {
+      snapshot.docs.forEach((element) {
+        initBanUsers.add(element.get('uid'));
+      });
     });
-    List<String> initBanMessage = [];
+  }
+  void queryBanMessages() async {
     FirebaseFirestore.instance.collection('streams')
         .doc(streamId)
         .collection('blacklist')
         .doc('local').collection('users')
         .doc(SessionKeeper.user.uid)
-        .collection('messages').get().then((value) {
-      value.docs.forEach((element) {
+        .collection('messages').snapshots().listen((snapshot) {
+      snapshot.docs.forEach((element) {
         initBanMessage.add(element.get('uid'));
       });
     });
+  }
+  void queryNumOfPeople() async {
+    FirebaseFirestore.instance.collection('flights')
+        .doc(streamId).snapshots().listen((snapshot) {
+          setState(() {
+            num_of_people = snapshot.data()!['peopleInChat'];
+          });
+        });
+
+  }
+  @override
+  void initState() {
+    super.initState();
+ }
+  @override
+  Widget build(BuildContext context) {
+    queryBanUsers();
+    queryBanMessages();
+    queryNumOfPeople();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'FlightBuddy',
-          style: TextStyle(color: Colors.white),
+          streamId + " " + num_of_people.toString() + " " + howManyHumans(num_of_people),
+          style: TextStyle(color: Colors.white, fontSize: 16),
         ),
         backgroundColor: constants.accentColor,
         elevation: 0.0,
@@ -84,5 +106,19 @@ class _FlightChatState extends State<FlightChat> {
         initBanUsers: initBanUsers,
       ),
     );
+  }
+  String howManyHumans(int num){
+    String result = constants.HUMAN;
+    num = num % 100;
+    if(num <= 10 || num >= 20){
+      num = num % 10;
+      switch(num){
+        case 2:
+        case 3:
+        case 4:
+          result = constants.HUMANS;
+      }
+    }
+    return result;
   }
 }
