@@ -86,6 +86,7 @@ class _RegisterState extends State<Register> {
                         onChanged: (name) {
                           nameSurname = name;
                         },
+                        initialValue: nameSurname,
                         keyboard: TextInputType.visiblePassword,
                         width: 0.85,
                         maxHeight: 0.07,
@@ -99,6 +100,7 @@ class _RegisterState extends State<Register> {
                     child: RoundedInputField(
                         hintText: constants.EMAIL.tr(),
                         //textAlign: TextAlign.center,
+                        initialValue: email,
                         keyboard: TextInputType.emailAddress,
                         width: 0.85,
                         maxHeight: 0.07,
@@ -129,7 +131,7 @@ class _RegisterState extends State<Register> {
                     height: 5,
                   ),
                   Container(
-                      padding: EdgeInsets.symmetric(horizontal: 23),
+                      padding: EdgeInsets.only(left: 23, right: 23, top: 27),
                       child: Row(
                         //mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,

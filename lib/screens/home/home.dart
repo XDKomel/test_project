@@ -8,7 +8,7 @@ import 'package:plane_chat/models/UserData.dart';
 import 'package:plane_chat/screens/authentication/authenticate.dart';
 import 'package:plane_chat/screens/authentication/sign_in.dart';
 import 'package:plane_chat/screens/home/add_flight.dart';
-import 'package:plane_chat/screens/home/flight_list.dart';
+import 'package:plane_chat/custom_widgets/flight_list.dart';
 import 'package:plane_chat/screens/home/profile.dart';
 import 'package:plane_chat/services/FlightData.dart';
 import 'package:plane_chat/services/auth.dart';
@@ -59,31 +59,35 @@ class _HomeState extends State<Home> {
 
       Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          'FlightBuddy',
-          style: TextStyle(color: Colors.white),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(constants.APPBAR_SIZE),
+        child: AppBar(
+
+          title: Text(
+            'FlightBuddy',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: constants.accentColor,
+          elevation: 0.0,
+          actions: <Widget>[
+            TextButton.icon(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Profile()),
+                  );
+                },
+                label: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                icon: Text(
+                  constants.PROFILE,
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ))
+          ],
         ),
-        backgroundColor: constants.accentColor,
-        elevation: 0.0,
-        actions: <Widget>[
-          TextButton.icon(
-              onPressed: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Profile()),
-                );
-              },
-              label: Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 30,
-              ),
-              icon: Text(
-                constants.PROFILE,
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ))
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

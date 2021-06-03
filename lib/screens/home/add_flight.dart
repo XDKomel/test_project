@@ -32,21 +32,24 @@ class _AddFlightState extends State<AddFlight> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(
-          '',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: constants.accentColor,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(constants.APPBAR_SIZE),
+        child: AppBar(
+          title: Text(
+            '',
+            style: TextStyle(color: Colors.white),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: constants.accentColor,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
       ),
       backgroundColor: Colors.white,

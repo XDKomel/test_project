@@ -807,7 +807,7 @@ class _CommentField extends State<CommentField> {
     }
   }
 
-  //
+
   // Future<void> banUser({ String? userId,  String? streamId}) async {
   //   if (!SessionKeeper.user!.authorities.contains(Authority.ADMIN)) {
   //     var documentReference = FirebaseFirestore.instance.collection('streams')

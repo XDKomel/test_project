@@ -48,57 +48,90 @@ class _FlightChatState extends State<FlightChat> {
   void queryNumOfPeople() async {
     FirebaseFirestore.instance.collection('flights')
         .doc(streamId).snapshots().listen((snapshot) {
+          num_of_people = snapshot.data()!['peopleInChat'];
           setState(() {
-            num_of_people = snapshot.data()!['peopleInChat'];
+
           });
         });
-
+  }
+  Future<int> getNumOfPeople() async {
+    DocumentReference documentReference =FirebaseFirestore.instance.collection('flights').doc(streamId);
+    int num=0;
+    await documentReference.get().then((snapshot) {
+      num = snapshot.get('peopleInChat');
+    });
+    return num;
   }
   @override
   void initState() {
     super.initState();
+    getNumOfPeople().then((value) {
+      setState(() {
+        num_of_people = value;
+      });
+    });
  }
   @override
   Widget build(BuildContext context) {
     queryBanUsers();
     queryBanMessages();
-    queryNumOfPeople();
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          streamId + " " + num_of_people.toString() + " " + howManyHumans(num_of_people),
-          style: TextStyle(color: Colors.white, fontSize: 16),
-        ),
-        backgroundColor: constants.accentColor,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(constants.APPBAR_SIZE),
+        child: AppBar(
+          centerTitle: false,
+          title: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  streamId,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                Text(
+                  num_of_people.toString() + " " + howManyHumans(num_of_people),
+                  style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
+                ),
+              ],
+            )
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: <Widget>[
-          TextButton.icon(
-              onPressed: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Profile()),
-                );
-              },
-              label: Icon(
-                Icons.person,
+          backgroundColor: constants.accentColor,
+          elevation: 0.0,
+          leadingWidth: 30,
+          leading: Container(
+            margin: EdgeInsets.only(left: 8),
+            child: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
                 color: Colors.white,
-                size: 30,
               ),
-              icon: Text(
-                constants.PROFILE,
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ))
-        ],
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton.icon(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Profile()),
+                  );
+                },
+                label: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                icon: Text(
+                  constants.PROFILE,
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ))
+          ],
+        ),
       ),
       body: CommentField(
         streamId: streamId,

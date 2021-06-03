@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:plane_chat/models/UserData.dart';
-import 'package:plane_chat/screens/wrapper.dart';
 import 'package:plane_chat/services/auth.dart';
 import 'package:provider/provider.dart';
 

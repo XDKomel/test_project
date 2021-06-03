@@ -37,11 +37,10 @@ class _FlightListState extends State<FlightList> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold
                   ),
               ),
             ),
-                ) : ListView.builder(
+                ) : ListView.separated(
                 padding: const EdgeInsets.only(
                     right: 10, left: 10, top: 24, bottom: 10),
                 itemCount: userSnapshot.data!.docs.length,
@@ -59,7 +58,11 @@ class _FlightListState extends State<FlightList> {
                       );
                     },
                   );
-                })
+                }, separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: 10,
+              );
+            },)
                 : Center(
               child: CircularProgressIndicator(),
             );

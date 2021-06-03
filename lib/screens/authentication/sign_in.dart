@@ -53,6 +53,7 @@ class _SignInState extends State<SignIn> {
               height: size.height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   SizedBox(
@@ -76,6 +77,7 @@ class _SignInState extends State<SignIn> {
                     margin: EdgeInsets.symmetric(horizontal: 23),
                     child: RoundedInputField(
                         hintText: constants.EMAIL.tr(),
+                        initialValue: email,
                         //textAlign: TextAlign.center,
                         keyboard: TextInputType.emailAddress,
                         width: 0.85,
@@ -103,12 +105,14 @@ class _SignInState extends State<SignIn> {
                         next: nodes[3]),
                   ),
 
-                  SizedBox(
-                    height: 194,
+                  Expanded(
+                    child: SizedBox(
+                      height: 7,
+                    ),
                   ),
 
 
-                  Spacer(),
+                  // Spacer(),
                   Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.only(bottom: 15, left: 23, right: 23),

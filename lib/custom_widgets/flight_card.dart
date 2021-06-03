@@ -45,9 +45,10 @@ class FlightCard extends StatelessWidget {
             print(snapshot.data!.data().toString());
             // Map<String, dynamic> data = json.decode(snapshot.data!.data().toString());
             return Card(
-                elevation: 20,
+                elevation: 5,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
+                  side:  BorderSide(color: Colors.grey.shade300, width: 1.0),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,8 +111,8 @@ class FlightCard extends StatelessWidget {
                                   child: Text(
                                     flightData.peopleInChat.toString() + " " + howManyHumans(flightData.peopleInChat),
                                     style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
+                                      fontSize: 15,
+                                      color: Colors.grey,
                                     ),
                                   ),
                                 ),
@@ -119,6 +120,7 @@ class FlightCard extends StatelessWidget {
                                     alignment: Alignment.centerRight,
                                     child: Container(
                                       alignment: Alignment.centerRight,
+                                      margin: EdgeInsets.only(right: 5),
                                       child: Icon(
                                         Icons.arrow_forward_ios_outlined,
                                         color: Colors.grey,

@@ -8,7 +8,7 @@ const String PASSWORD = "Пароль";
 const String SIGN_UP = "Создать";
 const String REGISTRATION = "Регистрация";
 const String INCORRECT_EMAIL = "Введите корректный email";
-const String INCORRECT_PASSWORD = "Введите корректный пароль";
+const String INCORRECT_PASSWORD = "Введите корректный пароль.\nМинимум: 6 символов, 1 буква и 1 цифра";
 const String INCORRECT_NAME = "Введите имя";
 const String REGISTRATION_FAILED = "Не удалось зарегистрироваться с такими данными";
 const String POLICY_AGREEMENT = "Я принимаю условия Пользовательского соглашения и обработки данных";
@@ -26,7 +26,7 @@ const String FLIGHT_ID_EXAMPLE = "Пример: 4D 729";
 const String CONTINUE = "Далее";
 const String NO_FLIGHTS = "Кажется, Ваш список полетов пуст :( \nДобавьте новый, нажав на синюю кнопку";
 const String FLIGHT_NOT_FOUND = "Рейс не найден :(";
-
+const double APPBAR_SIZE = 60;
 
 
 
