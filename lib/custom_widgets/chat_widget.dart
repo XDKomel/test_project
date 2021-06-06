@@ -612,12 +612,12 @@ class _CommentField extends State<CommentField> {
                       //onSendMessage(textEditingController.text, 0);
                     },
                     minLines: 1,
-                    maxLines: 10,
-                    style: TextStyle(color: Colors.black, fontSize: 14.0),
+                    maxLines: 8,
+                    style: TextStyle(color: Colors.black, fontSize: 18.0),
                     controller: textEditingController,
                     decoration: InputDecoration.collapsed(
                       hintText: "Отправить сообщение",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
                     ),
                     focusNode: focusNode,
                   ),
@@ -638,7 +638,7 @@ class _CommentField extends State<CommentField> {
             padding: EdgeInsets.only(right: 10),
           child: FloatingActionButton(
               onPressed: () {
-
+                onSendMessage(textEditingController.text, 0);
               },
             splashColor: Colors.blueAccent,
               child: const Icon(Icons.send),
