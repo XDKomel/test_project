@@ -5,6 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'package:plane_chat/custom_widgets/rounded_button.dart';
 import 'package:plane_chat/custom_widgets/rounded_input_field.dart';
 import 'package:plane_chat/custom_widgets/rounded_password_field.dart';
+import 'package:plane_chat/models/SessionKeeper.dart';
+import 'package:plane_chat/models/UserData.dart';
 import 'package:plane_chat/screens/authentication/sign_in.dart';
 import 'package:plane_chat/screens/home/home.dart';
 import 'package:plane_chat/services/auth.dart';
@@ -12,6 +14,7 @@ import 'package:plane_chat/shared/loading.dart';
 import 'package:plane_chat/shared/regex.dart';
 import 'package:plane_chat/shared/constants.dart' as constants;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Register extends StatefulWidget {
@@ -59,8 +62,10 @@ class _RegisterState extends State<Register> {
               height: size.height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
+                  Spacer(),
                   SizedBox(
                     height: 59,
                   ),
@@ -253,6 +258,10 @@ class _RegisterState extends State<Register> {
                               'email': email,
                               'name': nameSurname
                             });
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.setString('email', email);
+                            prefs.setString('name', nameSurname);
+                            SessionKeeper.user = new UserData(uid: result.uid, name: nameSurname);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => Home()),

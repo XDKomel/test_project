@@ -27,6 +27,18 @@ const String CONTINUE = "Далее";
 const String NO_FLIGHTS = "Кажется, Ваш список полетов пуст :( \nДобавьте новый, нажав на синюю кнопку";
 const String FLIGHT_NOT_FOUND = "Рейс не найден :(";
 const double APPBAR_SIZE = 60;
+const String DELETE_MSG = "Удалить сообщение";
+const String MSG_DELETING = "Удаление сообщения";
+const String BAN_TEXT = "Вы уверены, что хотите удалить сообщение?";
+const String CANCEL = "Отмена";
+const String COMPLAIN = "Подать жалобу";
+const String COMPLAINMENT_MSG = "Вы уверены, что хотите подать жалобу?";
+const String BAN_USER_MSG = "Вы уверены, что хотите заблокировать этого пользователся??";
+const String BAN_USER = "Заблокировать пользователя";
+const String BAN_USER_TEXT = "Блокировка пользователя";
+const String BAN = "Заблокировать";
+
+
 
 
 

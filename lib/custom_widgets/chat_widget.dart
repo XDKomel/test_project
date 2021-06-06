@@ -107,19 +107,19 @@ class _CommentField extends State<CommentField> {
               padding: EdgeInsets.only(left: 5, right: 5, top: 15),
               child: Text(
                 (!SessionKeeper.user.authorities.contains(Authority.ADMIN))
-                    ? "complain".tr()
+                    ? constants.COMPLAIN.tr()
                     : "Подать жалобу",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black, fontSize: 20),
               ),
             ),
             Padding(
               padding:
                   EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
               child: Text(
-                "complainmsg".tr(),
+                constants.COMPLAINMENT_MSG.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 18,
                     color: Colors.black,
                     fontWeight: FontWeight.normal),
               ),
@@ -131,17 +131,17 @@ class _CommentField extends State<CommentField> {
                 },
                 child: Text(
                   (!SessionKeeper.user.authorities.contains(Authority.ADMIN))
-                      ? "complain".tr()
+                      ? constants.COMPLAIN.tr()
                       : "Подать жалобу",
-                  style: TextStyle(color: Colors.red, fontSize: 16.0),
+                  style: TextStyle(color: Colors.red, fontSize: 20),
                 )),
             FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                  "cancel".tr(),
-                  style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  constants.CANCEL.tr(),
+                  style: TextStyle(color: Colors.black, fontSize: 20),
                 ))
           ],
         ),
@@ -172,19 +172,19 @@ class _CommentField extends State<CommentField> {
               padding: EdgeInsets.only(left: 5, right: 5, top: 15),
               child: Text(
                 (!SessionKeeper.user.authorities.contains(Authority.ADMIN))
-                    ? "complain".tr()
+                    ? constants.BAN_USER_TEXT.tr()
                     : "Заблокировать",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black, fontSize: 20),
               ),
             ),
             Padding(
               padding:
                   EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
               child: Text(
-                "reporttext".tr(),
+                constants.BAN_USER_MSG.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 18,
                     color: Colors.black,
                     fontWeight: FontWeight.normal),
               ),
@@ -202,17 +202,17 @@ class _CommentField extends State<CommentField> {
                 },
                 child: Text(
                   (!SessionKeeper.user.authorities.contains(Authority.ADMIN))
-                      ? "complain".tr()
+                      ? constants.BAN.tr()
                       : "Заблокировать",
-                  style: TextStyle(color: Colors.red, fontSize: 16.0),
+                  style: TextStyle(color: Colors.red, fontSize: 20),
                 )),
             FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                  "cancel".tr(),
-                  style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  constants.CANCEL.tr(),
+                  style: TextStyle(color: Colors.black, fontSize: 20),
                 ))
           ],
         ),
@@ -243,18 +243,18 @@ class _CommentField extends State<CommentField> {
             Padding(
               padding: EdgeInsets.only(left: 5, right: 5, top: 15),
               child: Text(
-                "deletemsg".tr(),
-                style: TextStyle(color: Colors.black),
+                constants.MSG_DELETING.tr(),
+                style: TextStyle(color: Colors.black, fontSize: 20),
               ),
             ),
             Padding(
               padding:
                   EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
               child: Text(
-                "bantext".tr(),
+                constants.BAN_TEXT.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 18,
                     color: Colors.black,
                     fontWeight: FontWeight.normal),
               ),
@@ -267,16 +267,16 @@ class _CommentField extends State<CommentField> {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                  "deletemsg".tr(),
-                  style: TextStyle(color: Colors.red, fontSize: 16.0),
+                  constants.DELETE_MSG.tr(),
+                  style: TextStyle(color: Colors.red, fontSize: 20),
                 )),
             FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                  "cancel".tr(),
-                  style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  constants.CANCEL.tr(),
+                  style: TextStyle(color: Colors.black, fontSize: 20),
                 ))
           ],
         ),
@@ -473,35 +473,46 @@ class _CommentField extends State<CommentField> {
                                   height: 25,
                                   value: "Complaint",
                                   child: Container(
+                                      margin: EdgeInsets.symmetric(vertical: 5),
+
                                       width: 120,
                                       child: Text(
                                         (!SessionKeeper.user.authorities
                                                 .contains(Authority.ADMIN))
-                                            ? "complain".tr()
+                                            ? constants.COMPLAIN.tr()
                                             : "Подать жалобу",
                                         style: TextStyle(fontSize: 14),
                                       )),
+                                ),
+                                PopupMenuDivider(
+                                  height: 2,
                                 ),
                                 PopupMenuItem<String>(
                                   height: 25,
                                   value: "Ban",
                                   child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 5),
                                       width: 120,
                                       child: Text(
                                         (!SessionKeeper.user.authorities
                                                 .contains(Authority.ADMIN))
-                                            ? "ban".tr()
+                                            ? constants.BAN.tr()
                                             : "Заблокировать",
                                         style: TextStyle(fontSize: 14),
                                       )),
                                 ),
+                                    PopupMenuDivider(
+                                      height: 2,
+                                    ),
                                 PopupMenuItem<String>(
                                   height: 25,
                                   value: "Delete",
                                   child: Container(
+                                      margin: EdgeInsets.symmetric(vertical: 5),
+
                                       width: 120,
                                       child: Text(
-                                        "deletemsg".tr(),
+                                        constants.DELETE_MSG.tr(),
                                         style: TextStyle(fontSize: 14),
                                       )),
                                 ),
@@ -622,28 +633,45 @@ class _CommentField extends State<CommentField> {
           margin: EdgeInsets.all(10),
         ),
       ),
-      Container(
-        padding: EdgeInsets.only(right: 10),
-        child: Material(
-          borderRadius: BorderRadius.circular(20),
-          child: InkWell(
-            child: Container(
-              alignment: Alignment.center,
-              child: IconButton(
-                icon: Icon(Icons.send_outlined),
-                iconSize: 20,
-                onPressed: () => onSendMessage(textEditingController.text, 0),
-                color: Colors.white,
-              ),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(60)),
-                  border: Border.all(color: Colors.transparent, width: 0.5),
-                  color: constants.accentColor),
+
+          Container(
+            padding: EdgeInsets.only(right: 10),
+          child: FloatingActionButton(
+              onPressed: () {
+
+              },
+            splashColor: Colors.blueAccent,
+              child: const Icon(Icons.send),
+              backgroundColor: constants.accentColor,
+
             ),
           ),
-          color: Colors.transparent,
-        ),
-      )
+      // Container(
+      //   padding: EdgeInsets.only(right: 10),
+      //   child: Material(
+      //     color: Colors.transparent,
+      //    // borderRadius: BorderRadius.circular(20),
+      //     child: InkWell(
+      //       customBorder: new CircleBorder(),
+      //       splashColor: Colors.red,
+      //       child: Container(
+      //         alignment: Alignment.center,
+      //         child: IconButton(
+      //           icon: Icon(Icons.send_outlined),
+      //           iconSize: 20,
+      //           onPressed: () => onSendMessage(textEditingController.text, 0),
+      //           color: Colors.white,
+      //           splashColor: Colors.greenAccent,
+      //           highlightColor: Colors.orange,
+      //         ),
+      //         // decoration: BoxDecoration(
+      //         //     borderRadius: BorderRadius.all(Radius.circular(60)),
+      //         //     border: Border.all(color: Colors.transparent, width: 0.5),
+      //         //     color: constants.accentColor),
+      //       ),
+      //     ),
+      //   ),
+      // )
     ]));
   }
 

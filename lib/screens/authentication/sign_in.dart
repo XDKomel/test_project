@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:plane_chat/custom_widgets/rounded_button.dart';
 import 'package:plane_chat/custom_widgets/rounded_input_field.dart';
 import 'package:plane_chat/custom_widgets/rounded_password_field.dart';
+import 'package:plane_chat/models/SessionKeeper.dart';
+import 'package:plane_chat/models/UserData.dart';
 import 'package:plane_chat/screens/authentication/register.dart';
 import 'package:plane_chat/screens/home/home.dart';
 import 'package:plane_chat/services/auth.dart';
@@ -10,6 +13,7 @@ import 'package:plane_chat/shared/loading.dart';
 import 'package:plane_chat/shared/regex.dart';
 import 'package:plane_chat/shared/constants.dart' as constants;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
 
@@ -30,7 +34,7 @@ class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
 
   bool checkedValue = false;
-  String nameSurname = "";
+  String uid='';
 
   String email = "";
   String password = "";
@@ -38,6 +42,7 @@ class _SignInState extends State<SignIn> {
   bool isError = false;
 
   bool loading = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +61,7 @@ class _SignInState extends State<SignIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
+                  Spacer(),
                   SizedBox(
                     height: 59,
                   ),
@@ -105,14 +111,15 @@ class _SignInState extends State<SignIn> {
                         next: nodes[3]),
                   ),
 
-                  Expanded(
-                    child: SizedBox(
-                      height: 7,
-                    ),
-                  ),
+                 //  Expanded(
+                 //    flex: 1,
+                 //    child: SizedBox(
+                 //      height: 7,
+                 //    ),
+                 // ),
 
 
-                  // Spacer(),
+                  Spacer(),
                   Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.only(bottom: 15, left: 23, right: 23),
@@ -201,6 +208,16 @@ class _SignInState extends State<SignIn> {
                             }
 
                           } else {
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.setString('email', email);
+                            uid = result.uid;
+                            getName().then((value) {
+                              setState(() {
+                                prefs.setString('name', value);
+                                SessionKeeper.user = new UserData(uid: result.uid, name: value);
+                                SessionKeeper.email = email;
+                              });
+                            });
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => Home()),
@@ -229,5 +246,14 @@ class _SignInState extends State<SignIn> {
 
   bool validateName(String name) {
     return RegExp(RegexType.NAME).hasMatch(name);
+  }
+
+  Future<String> getName() async {
+    DocumentReference documentReference =FirebaseFirestore.instance.collection('users').doc(uid);
+    String name = '';
+    await documentReference.get().then((snapshot) {
+      name = snapshot.get('name');
+    });
+    return name;
   }
 }

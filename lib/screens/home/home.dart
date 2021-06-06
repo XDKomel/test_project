@@ -32,39 +32,16 @@ class _HomeState extends State<Home> {
       SessionKeeper.user = UserData(uid: FirebaseAuth.instance.currentUser!.uid, name: value.get('name'));
     });
 
-    return
-    //   Scaffold(
-    //     resizeToAvoidBottomInset: false,
-    //     appBar: AppBar(
-    //       title: Text(
-    //         '',
-    //         style: TextStyle(color: Colors.white),
-    //       ),
-    //       backgroundColor: Colors.white,
-    //       elevation: 0.0,
-    //       leading: IconButton(
-    //         icon: Icon(
-    //           Icons.arrow_back_ios,
-    //           color: constants.accentColor,
-    //         ),
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //         },
-    //       ),
-    //     ),
-    //     backgroundColor: Colors.white,
-    //     body: FlightChat()
-    // );
 
 
-      Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(constants.APPBAR_SIZE),
         child: AppBar(
 
           title: Text(
-            'FlightBuddy',
+            'Flight Buddy',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: constants.accentColor,

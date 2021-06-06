@@ -45,15 +45,7 @@ class _FlightChatState extends State<FlightChat> {
       });
     });
   }
-  void queryNumOfPeople() async {
-    FirebaseFirestore.instance.collection('flights')
-        .doc(streamId).snapshots().listen((snapshot) {
-          num_of_people = snapshot.data()!['peopleInChat'];
-          setState(() {
 
-          });
-        });
-  }
   Future<int> getNumOfPeople() async {
     DocumentReference documentReference =FirebaseFirestore.instance.collection('flights').doc(streamId);
     int num=0;
