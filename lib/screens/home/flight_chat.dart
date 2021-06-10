@@ -8,7 +8,7 @@ import 'package:plane_chat/shared/constants.dart' as constants;
 
 class FlightChat extends StatefulWidget {
   final String streamId;
-  FlightChat({required this.streamId});
+  FlightChat({required this.streamId,});
 
   @override
   _FlightChatState createState() => _FlightChatState(streamId: streamId);
@@ -16,11 +16,13 @@ class FlightChat extends StatefulWidget {
 
 class _FlightChatState extends State<FlightChat> {
   final String streamId;
+  bool joined = true;
+
   List<String> initBanUsers = [];
   List<String> initBanMessage = [];
   int num_of_people=0;
 
-  _FlightChatState({required this.streamId});
+  _FlightChatState({required this.streamId,});
   void queryBanUsers() async {
     FirebaseFirestore.instance.collection('streams')
         .doc(streamId)
@@ -54,6 +56,14 @@ class _FlightChatState extends State<FlightChat> {
     });
     return num;
   }
+  void queryJoinStatus() async {
+    await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection("flights").doc(streamId).get().then((doc) {
+      setState(() {
+        if(doc.exists) joined = true;
+        else joined = false;
+      });
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -62,7 +72,9 @@ class _FlightChatState extends State<FlightChat> {
         num_of_people = value;
       });
     });
- }
+    queryJoinStatus();
+
+  }
   @override
   Widget build(BuildContext context) {
     queryBanUsers();
@@ -110,7 +122,7 @@ class _FlightChatState extends State<FlightChat> {
                 onPressed: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Profile()),
+                    MaterialPageRoute(builder: (context) => Profile(uid: SessionKeeper.user.uid)),
                   );
                 },
                 label: Icon(
@@ -129,6 +141,7 @@ class _FlightChatState extends State<FlightChat> {
         streamId: streamId,
         initBanMessage: initBanMessage,
         initBanUsers: initBanUsers,
+        joined: joined,
       ),
     );
   }

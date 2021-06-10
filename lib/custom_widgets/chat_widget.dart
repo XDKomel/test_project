@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plane_chat/models/UserData.dart';
+import 'package:plane_chat/screens/home/profile.dart';
 
 import 'package:plane_chat/shared/constants.dart' as constants;
 import 'package:easy_localization/easy_localization.dart';
@@ -19,13 +20,15 @@ class CommentField extends StatefulWidget {
   Function? onMessageSend;
   String? streamId;
   String? token;
+  bool? joined=false;
 
   CommentField(
       {this.streamId,
       required this.initBanUsers,
       required this.initBanMessage,
       this.onMessageSend,
-      this.token});
+      this.token,
+      this.joined});
 
   @override
   State<StatefulWidget> createState() => _CommentField(
@@ -33,7 +36,8 @@ class CommentField extends StatefulWidget {
       streamId: streamId,
       banUsers: initBanUsers,
       banMessages: initBanMessage,
-      onMessageSend: onMessageSend);
+      onMessageSend: onMessageSend,
+      joined: joined);
 }
 
 class _CommentField extends State<CommentField> {
@@ -51,6 +55,8 @@ class _CommentField extends State<CommentField> {
   String? token;
   final _random = new Random();
   String? streamId;
+  int numOfPeople=0;
+  bool? joined=false;
   Map<String, String> avatars = {};
 
   _CommentField(
@@ -58,7 +64,8 @@ class _CommentField extends State<CommentField> {
       required this.banUsers,
       required this.banMessages,
       this.onMessageSend,
-      this.token});
+      this.token,
+      this.joined});
 
   final TextEditingController textEditingController = TextEditingController();
   List<QueryDocumentSnapshot> listMessage = new List.from([]);
@@ -289,93 +296,88 @@ class _CommentField extends State<CommentField> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    joined = widget.joined;
     //print("List: "+SessionKeeper.user.authorities.toString());
     return Container(
         width: double.infinity,
         alignment: Alignment.centerRight,
-        child: WillPopScope(
-          onWillPop: () async {
-            await Future.delayed(Duration(seconds: 1));
-            return Future.error('Error from return');
-          },
-          child: Stack(
-            alignment: Alignment.centerRight,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: Container(
-                        width: size.width,
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('streams')
-                              .doc(streamId)
-                              .collection('messages')
-                              .orderBy('time', descending: true)
-                              .limit(_limit)
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return Center(
-                                  child: Container(
-                                      margin: EdgeInsets.only(top: 15),
-                                      child: CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  constants.kPrimaryColor))));
-                            } else {
-                              var messageList = [];
-                              listMessage = snapshot.data!.docs;
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Container(
+                      width: size.width,
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('streams')
+                            .doc(streamId)
+                            .collection('messages')
+                            .orderBy('time', descending: true)
+                            .limit(_limit)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                                child: Container(
+                                    margin: EdgeInsets.only(top: 15),
+                                    child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                constants.kPrimaryColor))));
+                          } else {
+                            var messageList = [];
+                            listMessage = snapshot.data!.docs;
 
-                              listMessage.forEach((element) {
-                                Timestamp time = element.get('time');
+                            listMessage.forEach((element) {
+                              Timestamp time = element.get('time');
 
-                                if (!banUsers
-                                        .contains(element.get('user_id')) &&
-                                    !banMessages.contains(
-                                        element.get('user_id') +
-                                            time.millisecondsSinceEpoch
-                                                .toString())) {
-                                  messageList.add(element);
-                                }
+                              if (!banUsers
+                                      .contains(element.get('user_id')) &&
+                                  !banMessages.contains(
+                                      element.get('user_id') +
+                                          time.millisecondsSinceEpoch
+                                              .toString())) {
+                                messageList.add(element);
+                              }
 
-                                //messageList.add(element);
-                              });
-                              //messageList = List.from(messageList.reversed);
-                              // double height = size.height * 0.925 - 144 -
-                              //     (9.0 / 16.0) * size.width;
-                              return Container(
-                                  alignment: Alignment.centerRight,
-                                  // height: height >0? height ,
-                                  // // - (16.0/9.0)*size.width
+                              //messageList.add(element);
+                            });
+                            //messageList = List.from(messageList.reversed);
+                            // double height = size.height * 0.925 - 144 -
+                            //     (9.0 / 16.0) * size.width;
+                            return Container(
+                                alignment: Alignment.centerRight,
+                                // height: height >0? height ,
+                                // // - (16.0/9.0)*size.width
 
-                                  child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: ListView.builder(
-                                        padding: EdgeInsets.all(10.0),
-                                        itemBuilder: (context, index) =>
-                                            buildItem(
-                                                index, messageList[index]),
-                                        itemCount: messageList.length,
-                                        reverse: true,
-                                        shrinkWrap: true,
-                                        controller: listScrollController,
-                                      )));
-                            }
-                          },
-                        )),
-                  ),
-                  buildInput(),
-                ],
-              )
-            ],
-          ),
+                                child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.all(10.0),
+                                      itemBuilder: (context, index) =>
+                                          buildItem(
+                                              index, messageList[index]),
+                                      itemCount: messageList.length,
+                                      reverse: true,
+                                      shrinkWrap: true,
+                                      controller: listScrollController,
+                                    )));
+                          }
+                        },
+                      )),
+                ),
+                if(joined == true) buildInput()
+                else buildJoinPanel()
+              ],
+            )
+          ],
         ));
   }
 
@@ -401,18 +403,26 @@ class _CommentField extends State<CommentField> {
             : MainAxisAlignment.start,
         children: <Widget>[
           if (uid != SessionKeeper.user.uid)
-            Container(
-              margin: EdgeInsets.only(right: 5),
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
-                image: DecorationImage(
-                    scale: 0.6,
-                    image: ExactAssetImage('assets/images/image1.png'),
-                    //[ExactAssetImage('android/assets/images/woman.png'),ExactAssetImage('android/assets/images/man.png'),ExactAssetImage('android/assets/images/woman2.png')][_random.nextInt(3)],
-                    fit: BoxFit.contain),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Profile(uid: uid)),
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                width: 35,
+                height: 35,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                  image: DecorationImage(
+                      scale: 0.6,
+                      image: ExactAssetImage('assets/images/image1.png'),
+                      //[ExactAssetImage('android/assets/images/woman.png'),ExactAssetImage('android/assets/images/man.png'),ExactAssetImage('android/assets/images/woman2.png')][_random.nextInt(3)],
+                      fit: BoxFit.contain),
+                ),
               ),
             ),
           Container(
@@ -431,7 +441,7 @@ class _CommentField extends State<CommentField> {
                             color: (uid != SessionKeeper.user.uid)
                                 ? Color(0xff7C7C7C)
                                 : Colors.white,
-                            fontSize: 16),
+                            fontSize: 18),
                       ),
                       if (uid != SessionKeeper.user.uid)
                         Container(
@@ -542,7 +552,7 @@ class _CommentField extends State<CommentField> {
                           color: (uid != SessionKeeper.user.uid)
                               ? Colors.black
                               : Colors.white,
-                          fontSize: 20,
+                          fontSize: 17,
                           fontWeight: FontWeight.normal),
                     ))),
                     //if((uid!=SessionKeeper.user.uid))
@@ -571,19 +581,27 @@ class _CommentField extends State<CommentField> {
             ),
           ),
           if (uid == SessionKeeper.user.uid)
-            Container(
-              //padding: EdgeInsets.only(top: 5),
-              margin: EdgeInsets.only(left: 5),
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
-                image: DecorationImage(
-                    scale: 0.6,
-                    image: ExactAssetImage('assets/images/image1.png'),
-                    //[ExactAssetImage('android/assets/images/woman.png'),ExactAssetImage('android/assets/images/man.png'),ExactAssetImage('android/assets/images/woman2.png')][_random.nextInt(3)],
-                    fit: BoxFit.contain),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Profile(uid: uid)),
+                );
+              },
+              child: Container(
+                //padding: EdgeInsets.only(top: 5),
+                margin: EdgeInsets.only(left: 5),
+                width: 35,
+                height: 35,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                  image: DecorationImage(
+                      scale: 0.6,
+                      image: ExactAssetImage('assets/images/image1.png'),
+                      //[ExactAssetImage('android/assets/images/woman.png'),ExactAssetImage('android/assets/images/man.png'),ExactAssetImage('android/assets/images/woman2.png')][_random.nextInt(3)],
+                      fit: BoxFit.contain),
+                ),
               ),
             ),
         ]);
@@ -674,11 +692,49 @@ class _CommentField extends State<CommentField> {
       // )
     ]));
   }
+  Widget buildJoinPanel() {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+        margin: EdgeInsets.only(bottom: 5, left: 2, right: 2),
+        child: Row(children: [
+          Expanded(
+            child: SizedBox(
+              width: double.infinity,
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: constants.accentColor
+                ),
+                constraints: BoxConstraints(minHeight: 50, maxHeight: 300),
+                child: TextButton(
+                  onPressed: () async {
+                      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection("flights").doc(streamId).set({
+                        'id': streamId,
+                      });
+                      await FirebaseFirestore.instance.collection('flights').doc(streamId).get().then((doc) {
+                        int num = doc.get('peopleInChat') + 1;
+                        FirebaseFirestore.instance.collection('flights').doc(streamId).update({
+                          'peopleInChat': num
+                        });
+                      });
+                      setState(() {
+                        joined = true;
+                        widget.joined = true;
 
+                      });
+                  },
+                  child: const Text('Вступить в чат?', style: TextStyle(fontSize: 20, color: Colors.white),),
+                ),
+
+                ),
+            )
+            ),
+          
+        ]));
+  }
   void onSendMessage(String content, int type) {
     //FocusManager.instance.primaryFocus!.unfocus();
     //onMessageSend!.call();
-    print(SessionKeeper.user.uid);
     if (content.trim() != '') {
       textEditingController.clear();
 
@@ -696,8 +752,6 @@ class _CommentField extends State<CommentField> {
 
       //counterRef.update({'count': FieldValue.increment(1)});
 
-      print("NAME " + streamId!);
-      print("AAAOAOOOAOAOOAOAAOAO" + SessionKeeper.user.name);
 
       FirebaseFirestore.instance.runTransaction((transaction) async {
         transaction.set(

@@ -29,7 +29,7 @@ class _RegisterState extends State<Register> {
     FocusNode(),
     FocusNode(),
     FocusNode(),
-    FocusNode()
+    FocusNode(),
   ];
 
   final AuthService _auth = AuthService();
@@ -38,6 +38,7 @@ class _RegisterState extends State<Register> {
   String nameSurname = "";
 
   String email = "";
+  String contact="";
   String password = "";
   String confPassword = "";
   String errorLabel = "";
@@ -66,9 +67,7 @@ class _RegisterState extends State<Register> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Spacer(),
-                  SizedBox(
-                    height: 59,
-                  ),
+
                   Center(
                     child: Text(constants.REGISTRATION.tr(),
                         style: TextStyle(
@@ -79,9 +78,7 @@ class _RegisterState extends State<Register> {
                         )),
                   ),
 
-                  SizedBox(
-                    height: 34,
-                  ),
+                  Spacer(),
 
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 23),
@@ -99,7 +96,22 @@ class _RegisterState extends State<Register> {
                         current: nodes[0],
                         next: nodes[1]),
                   ),
-
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 23),
+                    child: RoundedInputField(
+                        hintText: constants.CONTACT.tr(),
+                        //textAlign: TextAlign.center,
+                        initialValue: contact,
+                        keyboard: TextInputType.text,
+                        width: 0.85,
+                        maxHeight: 0.07,
+                        maxCharacters: 30,
+                        onChanged: (contact) {
+                          this.contact = contact;
+                        },
+                        current: nodes[1],
+                        next: nodes[2]),
+                  ),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 23),
                     child: RoundedInputField(
@@ -113,8 +125,8 @@ class _RegisterState extends State<Register> {
                         onChanged: (email) {
                           this.email = email;
                         },
-                        current: nodes[1],
-                        next: nodes[2]),
+                        current: nodes[2],
+                        next: nodes[3]),
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 23),
@@ -128,8 +140,8 @@ class _RegisterState extends State<Register> {
                         onChanged: (password) {
                           this.password = password;
                         },
-                        current: nodes[2],
-                        next: nodes[3]),
+                        current: nodes[3],
+                        next: nodes[4]),
                   ),
 
                   SizedBox(
@@ -159,9 +171,7 @@ class _RegisterState extends State<Register> {
                           privacyPolicyLinkAndTermsOfService()
                         ],
                       )),
-                  SizedBox(
-                    height: 25,
-                  ),
+                Spacer(),
                   Container(
                     alignment: Alignment.center,
                     child: Center(
@@ -248,15 +258,16 @@ class _RegisterState extends State<Register> {
                             }
 
                           } else {
-                            FirebaseFirestore.instance.collection('users').doc(result.uid).collection("flights").doc('AB 1234').set({
-                              'id': 'AB 1234',
-                            });
-                            FirebaseFirestore.instance.collection('users').doc(result.uid).collection("flights").doc('BM 2345').set({
-                              'id': 'BM 2345',
-                            });
+                            // FirebaseFirestore.instance.collection('users').doc(result.uid).collection("flights").doc('AB 1234').set({
+                            //   'id': 'AB 1234',
+                            // });
+                            // FirebaseFirestore.instance.collection('users').doc(result.uid).collection("flights").doc('BM 2345').set({
+                            //   'id': 'BM 2345',
+                            // });
                             FirebaseFirestore.instance.collection('users').doc(result.uid).set({
                               'email': email,
-                              'name': nameSurname
+                              'name': nameSurname,
+                              'contact': contact,
                             });
                             final prefs = await SharedPreferences.getInstance();
                             prefs.setString('email', email);

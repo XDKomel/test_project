@@ -25,12 +25,19 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   late final String uid = FirebaseAuth.instance.currentUser!.uid;
-
+  void queryUserdata() async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) async {
+      SessionKeeper.user = UserData(uid: uid, name: value.get('name'));
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    queryUserdata();
+  }
   @override
   Widget build(BuildContext context) {
-    FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) async {
-      SessionKeeper.user = UserData(uid: FirebaseAuth.instance.currentUser!.uid, name: value.get('name'));
-    });
+
 
 
 
@@ -51,7 +58,7 @@ class _HomeState extends State<Home> {
                 onPressed: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Profile()),
+                    MaterialPageRoute(builder: (context) => Profile(uid: uid)),
                   );
                 },
                 label: Icon(

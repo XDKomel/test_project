@@ -35,12 +35,16 @@ class FlightCard extends StatelessWidget {
             //snapshot.data.data -> Map of fields that you need :)
 
             Map<String, dynamic>? data = snapshot.data!.data();
+            Timestamp t = data!['filed_departuretime'];
+            DateTime datetime = t.toDate();
 
+            String hour = (datetime.hour<10? "0" : "") + datetime.hour.toString();
+            String minute = (datetime.minute<10? "0" : "") + datetime.minute.toString();
             flightData = FlightData(
-                originDestination: data!['originDestination'] ?? 'no data',
-                date: data['date'] ?? 'no data',
-                time: data['time'] ?? 'no data',
-                peopleInChat: data['peopleInChat'] ?? 'no data');
+                originDestination: data['origin'] + "-" + data['destination'],
+                date: date(datetime),
+                time: hour + ":" + minute,
+                peopleInChat: data['peopleInChat'] ?? 0);
             //TODO Okay, now you can use documentFields (json) as needed
             print(snapshot.data!.data().toString());
             // Map<String, dynamic> data = json.decode(snapshot.data!.data().toString());
@@ -162,6 +166,51 @@ class FlightCard extends StatelessWidget {
     //   ),
     // );
   }
+
+  String date(DateTime tm) {
+    if(tm==null) return '';
+    String month='';
+    switch (tm.month) {
+      case 1:
+        month = constants.JANUARY;
+        break;
+      case 2:
+        month = constants.FEBRUARY;
+        break;
+      case 3:
+        month = constants.MARCH;
+        break;
+      case 4:
+        month = constants.APRIL;
+        break;
+      case 5:
+        month = constants.MAY;
+        break;
+      case 6:
+        month = constants.JUNE;
+        break;
+      case 7:
+        month = constants.JULY;
+        break;
+      case 8:
+        month = constants.AUGUST;
+        break;
+      case 9:
+        month = constants.SEPTEMBER;
+        break;
+      case 10:
+        month = constants.OCTOBER;
+        break;
+      case 11:
+        month = constants.NOVEMBER;
+        break;
+      case 12:
+        month = constants.DECEMBER;
+        break;
+    }
+    return tm.day.toString() + " " + month;
+  }
+
   String howManyHumans(int num){
     String result = constants.HUMAN;
     num = num % 100;

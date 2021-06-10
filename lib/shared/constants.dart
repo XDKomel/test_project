@@ -38,6 +38,23 @@ const String BAN_USER = "Заблокировать пользователя";
 const String BAN_USER_TEXT = "Блокировка пользователя";
 const String BAN = "Заблокировать";
 
+const String CONTACT = "Контакт (Опционально)";
+
+
+const String JANUARY = "Января";
+const String FEBRUARY = "Февраля";
+const String MARCH = "Марта";
+const String APRIL = "Апреля";
+const String MAY = "Мая";
+const String JUNE = "Июня";
+const String JULY = "Июля";
+const String AUGUST = "Августа";
+const String SEPTEMBER = "Сентября";
+const String OCTOBER = "Октября";
+const String NOVEMBER = "Ноября";
+const String DECEMBER = "Декабря";
+
+
 
 
 
