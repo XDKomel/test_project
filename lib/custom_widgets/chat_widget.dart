@@ -13,27 +13,35 @@ import 'package:plane_chat/models/SessionKeeper.dart';
 import 'package:plane_chat/models/authorities.dart';
 
 String streamID = '';
+typedef void IntCallback(int id);
 
 class CommentField extends StatefulWidget {
   List<String> initBanMessage;
   List<String> initBanUsers;
   Function? onMessageSend;
-  String? streamId;
+  String streamId;
+  String display_id;
   String? token;
   bool? joined=false;
 
+  final IntCallback onPeopleChanged;
+
   CommentField(
-      {this.streamId,
+      {required this.streamId,
+        required this.display_id,
       required this.initBanUsers,
       required this.initBanMessage,
+        required this.onPeopleChanged,
       this.onMessageSend,
       this.token,
       this.joined});
 
   @override
   State<StatefulWidget> createState() => _CommentField(
+    onPeopleChanged: onPeopleChanged,
       token: this.token,
       streamId: streamId,
+      display_id: display_id,
       banUsers: initBanUsers,
       banMessages: initBanMessage,
       onMessageSend: onMessageSend,
@@ -42,6 +50,8 @@ class CommentField extends StatefulWidget {
 
 class _CommentField extends State<CommentField> {
   Function? onMessageSend;
+  final IntCallback onPeopleChanged;
+
   List<String> banUsers = new List.from([]);
 
   List<String> banMessages = new List.from([]);
@@ -54,15 +64,18 @@ class _CommentField extends State<CommentField> {
 
   String? token;
   final _random = new Random();
-  String? streamId;
+  String streamId;
+  String display_id;
   int numOfPeople=0;
   bool? joined=false;
   Map<String, String> avatars = {};
 
   _CommentField(
-      {this.streamId,
+      {required this.streamId,
+        required this.display_id,
       required this.banUsers,
       required this.banMessages,
+        required this.onPeopleChanged,
       this.onMessageSend,
       this.token,
       this.joined});
@@ -74,7 +87,7 @@ class _CommentField extends State<CommentField> {
 
   @override
   void initState() {
-    streamID = this.streamId!;
+    streamID = this.streamId;
     listScrollController.addListener(_scrollListener);
   }
 
@@ -710,18 +723,19 @@ class _CommentField extends State<CommentField> {
                   onPressed: () async {
                       await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection("flights").doc(streamId).set({
                         'id': streamId,
+                        'display_id': display_id
                       });
+                      joined = true;
+                      widget.joined = true;
                       await FirebaseFirestore.instance.collection('flights').doc(streamId).get().then((doc) {
                         int num = doc.get('peopleInChat') + 1;
                         FirebaseFirestore.instance.collection('flights').doc(streamId).update({
                           'peopleInChat': num
                         });
+                        onPeopleChanged(num);
                       });
-                      setState(() {
-                        joined = true;
-                        widget.joined = true;
 
-                      });
+
                   },
                   child: const Text('Вступить в чат?', style: TextStyle(fontSize: 20, color: Colors.white),),
                 ),

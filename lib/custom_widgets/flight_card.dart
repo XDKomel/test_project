@@ -8,10 +8,11 @@ import 'package:plane_chat/shared/constants.dart' as constants;
 
 
 class FlightCard extends StatelessWidget {
-  String? id;
+  String id;
+  String display_id;
   late FlightData flightData;
 
-  FlightCard({this.id});
+  FlightCard({required this.id, required this.display_id});
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> provideDocumentFieldStream() {
     return FirebaseFirestore.instance.collection('flights').doc(id).snapshots();
@@ -74,7 +75,7 @@ class FlightCard extends StatelessWidget {
                           margin:
                               EdgeInsets.only(left: 15, right: 15, bottom: 25),
                           child: Text(
-                            id!,
+                            display_id,
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.black,

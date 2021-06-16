@@ -48,13 +48,15 @@ class _FlightListState extends State<FlightList> {
                   DocumentSnapshot flightData =
                   userSnapshot.data!.docs[index];
                   String id = flightData['id'];
+                  String display_id = flightData['display_id'];
+
                   return InkWell(
-                    child: FlightCard(id: id),
+                    child: FlightCard(id: id, display_id: display_id,),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => FlightChat(streamId: id,)),
+                            builder: (context) => FlightChat(streamId: id, display_id: display_id)),
                       );
                     },
                   );

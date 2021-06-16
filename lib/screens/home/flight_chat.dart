@@ -8,21 +8,23 @@ import 'package:plane_chat/shared/constants.dart' as constants;
 
 class FlightChat extends StatefulWidget {
   final String streamId;
-  FlightChat({required this.streamId,});
+  final String display_id;
+  FlightChat({required this.streamId, required this.display_id});
 
   @override
-  _FlightChatState createState() => _FlightChatState(streamId: streamId);
+  _FlightChatState createState() => _FlightChatState(streamId: streamId, display_id: display_id);
 }
 
 class _FlightChatState extends State<FlightChat> {
   final String streamId;
+  final String display_id;
   bool joined = true;
 
   List<String> initBanUsers = [];
   List<String> initBanMessage = [];
   int num_of_people=0;
 
-  _FlightChatState({required this.streamId,});
+  _FlightChatState({required this.streamId, required this.display_id});
   void queryBanUsers() async {
     FirebaseFirestore.instance.collection('streams')
         .doc(streamId)
@@ -72,13 +74,13 @@ class _FlightChatState extends State<FlightChat> {
         num_of_people = value;
       });
     });
-    queryJoinStatus();
 
   }
   @override
   Widget build(BuildContext context) {
     queryBanUsers();
     queryBanMessages();
+    queryJoinStatus();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -92,7 +94,7 @@ class _FlightChatState extends State<FlightChat> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  streamId,
+                  display_id,
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 Text(
@@ -138,13 +140,22 @@ class _FlightChatState extends State<FlightChat> {
         ),
       ),
       body: CommentField(
+        onPeopleChanged: onPeopleChanged,
         streamId: streamId,
+        display_id: display_id,
         initBanMessage: initBanMessage,
         initBanUsers: initBanUsers,
         joined: joined,
       ),
     );
   }
+
+  void onPeopleChanged(int num){
+    setState(() {
+      num_of_people = num;
+    });
+  }
+
   String howManyHumans(int num){
     String result = constants.HUMAN;
     num = num % 100;

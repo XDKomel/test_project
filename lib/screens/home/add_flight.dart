@@ -90,7 +90,7 @@ class _AddFlightState extends State<AddFlight> {
                   maxCharacters: 30,
                   textAlign: TextAlign.center,
                   onChanged: (flightId) {
-                    this.flightId = flightId;
+                    this.flightId = flightId.toUpperCase().replaceAll(new RegExp(r"\s+"), "");
                   },
                 ),
               ),
@@ -123,13 +123,27 @@ class _AddFlightState extends State<AddFlight> {
                           .get()
                           .then((document) {
                         if (document.exists) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => FlightChat(
-                                      streamId: flightId,
-                                    )),
-                          );
+                          String reference = document.get('reference');
+                          if(reference.isNotEmpty){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FlightChat(
+                                    streamId: reference,
+                                    display_id: flightId,
+                                  )),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FlightChat(
+                                    streamId: flightId,
+                                    display_id: flightId,
+                                  )),
+                            );
+                          }
+
                         } else {
                           fetchFlight(flightId).then((obj) {
                             if (!obj.error) {
@@ -138,12 +152,18 @@ class _AddFlightState extends State<AddFlight> {
                                   .doc(obj.ident)
                                   .get()
                                   .then((value) {
-                                if (document.exists) {
+                                if (value.exists) {
+                                  FirebaseFirestore.instance
+                                      .collection('flights')
+                                      .doc(flightId).set({
+                                    'reference': obj.ident
+                                  });
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => FlightChat(
                                               streamId: obj.ident ?? flightId,
+                                          display_id: flightId,
                                             )),
                                   );
                                 } else {
@@ -173,11 +193,19 @@ class _AddFlightState extends State<AddFlight> {
                                     'destinationCity': obj.destinationCity,
                                     'peopleInChat': 0
                                   });
+                                  if(flightId != obj.ident){
+                                    FirebaseFirestore.instance
+                                        .collection('flights')
+                                        .doc(flightId).set({
+                                      'reference': obj.ident
+                                    });
+                                  }
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => FlightChat(
                                           streamId: obj.ident ?? flightId,
+                                          display_id: flightId,
                                         )),
                                   );
                                 }
@@ -192,6 +220,7 @@ class _AddFlightState extends State<AddFlight> {
 
                             print(obj.toString());
                           });
+                          
                         }
                       });
                     } else {
@@ -277,7 +306,8 @@ class Flight {
       required this.error});
 
   factory Flight.fromJson(Map<String, dynamic> json) {
-    if (json['error'] != null)
+    //Map<String, dynamic> map = jsonDecode(json[0]);
+    if (json.containsKey('error'))
       return Flight(error: true);
     else
       json = json['FlightInfoResult']['flights'][0];
