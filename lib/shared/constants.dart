@@ -1,13 +1,19 @@
 import 'dart:ui';
 
-const Color accentColor = Color.fromARGB(255, 0, 194, 255);
-const Color kPrimaryColor = Color.fromARGB(255, 0, 194, 255);
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+const Color accentColor = Color(0xFF5283B7);
+
+const Color kPrimaryColor = Color(0xFF5283B7);
 const String NAME = "Имя";
 const String EMAIL = "Эл. Почта";
 const String PASSWORD = "Пароль";
 const String SIGN_UP = "Создать";
 const String REGISTRATION = "Регистрация";
+const String REGISTRATE= "Зарегистрироваться";
 const String INCORRECT_EMAIL = "Введите корректный email";
+const String ADD_FLIGHT = "Добавить рейс";
 const String INCORRECT_PASSWORD = "Введите корректный пароль.\nМинимум: 6 символов, 1 буква и 1 цифра";
 const String INCORRECT_NAME = "Введите имя";
 const String REGISTRATION_FAILED = "Не удалось зарегистрироваться с такими данными";
@@ -24,7 +30,7 @@ const String LOG_OUT = "Выйти";
 const String TYPE_FLIGHT_ID = "Введите номер рейса";
 const String FLIGHT_ID_EXAMPLE = "Пример: KC 1492";
 const String CONTINUE = "Далее";
-const String NO_FLIGHTS = "Кажется, Ваш список полетов пуст :( \nДобавьте новый, нажав на синюю кнопку";
+const String NO_FLIGHTS = "Кажется, Ваш список полетов пуст :( \nДобавьте новый, нажав на кнопку снизу";
 const String FLIGHT_NOT_FOUND = "Рейс не найден :(";
 const double APPBAR_SIZE = 60;
 const String DELETE_MSG = "Удалить сообщение";
@@ -53,6 +59,12 @@ const String SEPTEMBER = "Сентября";
 const String OCTOBER = "Октября";
 const String NOVEMBER = "Ноября";
 const String DECEMBER = "Декабря";
+
+const Color gradientBeginColor = Color(0xFFD4E0ED);
+const Color gradientEndColor = Color(0xFFECD4E3);
+const AlignmentGeometry gradientStart = Alignment.topCenter;
+const AlignmentGeometry gradientEnd = Alignment.bottomCenter;
+
 
 
 

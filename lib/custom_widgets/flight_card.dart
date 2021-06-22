@@ -11,30 +11,21 @@ class FlightCard extends StatelessWidget {
   String id;
   String display_id;
   late FlightData flightData;
+  Timestamp time;
 
-  FlightCard({required this.id, required this.display_id});
+  FlightCard({required this.id, required this.display_id, required this.time});
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> provideDocumentFieldStream() {
-    return FirebaseFirestore.instance.collection('flights').doc(id).snapshots();
+    return FirebaseFirestore.instance.collection('flights').doc(id).collection('flights').doc(time.seconds.toString()).snapshots();
   }
 
   @override
   Widget build(BuildContext context) {
-    // FirebaseFirestore.instance.collection('flights').doc(id).snapshots().listen((DocumentSnapshot documentSnapshot) {
-    //   Map<String, dynamic> firestoreInfo = documentSnapshot.data as Map<String, dynamic>;
-    //   flightData = FlightData(originDestination: firestoreInfo['originDestination'], id: id, date: firestoreInfo['date'], time: firestoreInfo['time'],
-    //       peopleInChat: firestoreInfo['peopleInChat']);
-    //
-    // });
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: provideDocumentFieldStream(),
         builder: (BuildContext context,
             AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasData) {
-            //snapshot -> AsyncSnapshot of DocumentSnapshot
-            //snapshot.data -> DocumentSnapshot
-            //snapshot.data.data -> Map of fields that you need :)
-
             Map<String, dynamic>? data = snapshot.data!.data();
             Timestamp t = data!['filed_departuretime'];
             DateTime datetime = t.toDate();
@@ -46,126 +37,121 @@ class FlightCard extends StatelessWidget {
                 date: date(datetime),
                 time: hour + ":" + minute,
                 peopleInChat: data['peopleInChat'] ?? 0);
-            //TODO Okay, now you can use documentFields (json) as needed
-            print(snapshot.data!.data().toString());
-            // Map<String, dynamic> data = json.decode(snapshot.data!.data().toString());
-            return Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  side:  BorderSide(color: Colors.grey.shade300, width: 1.0),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
+            return Container(
+              child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient:  LinearGradient(
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
+                        colors: [Color.fromARGB(255, 255, 255, 255), Color.fromARGB(255, 224, 224, 224)],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: Colors.grey.withOpacity(0.3),
+                      //     spreadRadius: 2,
+                      //     blurRadius: 3,
+                      //     offset: Offset(0, 4), // changes position of shadow
+                      //   ),
+                      // ],
+                    ),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.all(15),
-                          child: Text(
-                            flightData.originDestination,
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          margin:
-                              EdgeInsets.only(left: 15, right: 15, bottom: 25),
-                          child: Text(
-                            display_id,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.all(15),
+                              child: Text(
+                                flightData.originDestination,
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          margin:
-                              EdgeInsets.only(bottom: 15, left: 15, right: 15),
-                          child: RichText(
-                            text: TextSpan(
-                              style: TextStyle(color: Colors.black),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: flightData.date + "   ",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 18),
+                            Container(
+                              margin:
+                                  EdgeInsets.only(left: 15, right: 15, bottom: 25),
+                              child: Text(
+                                display_id,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
                                 ),
-                                TextSpan(
-                                  text: flightData.time,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                        Container(
-                                  alignment: Alignment.topRight,
-                                  margin: EdgeInsets.only(left: 15, right: 15, bottom: 25, top: 15),
-                                  child: Text(
-                                    flightData.peopleInChat.toString() + " " + howManyHumans(flightData.peopleInChat),
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey,
+                            Container(
+                              margin:
+                                  EdgeInsets.only(bottom: 15, left: 15, right: 15),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: TextStyle(color: Colors.black),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: flightData.date + " ",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 18),
                                     ),
-                                  ),
+                                    TextSpan(
+                                      text: flightData.time,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                  ],
                                 ),
-                                Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Container(
-                                      alignment: Alignment.centerRight,
-                                      margin: EdgeInsets.only(right: 5),
-                                      child: Icon(
-                                        Icons.arrow_forward_ios_outlined,
-                                        color: Colors.grey,
-                                        size: 30,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: <Widget>[
+                            Container(
+                                      alignment: Alignment.topRight,
+                                      margin: EdgeInsets.only(left: 15, right: 15, bottom: 25, top: 15),
+                                      child: Text(
+                                        flightData.peopleInChat.toString() + " " + howManyHumans(flightData.peopleInChat),
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
-                                ),
+                                    // Align(
+                                    //     alignment: Alignment.centerRight,
+                                    //     child: Container(
+                                    //       alignment: Alignment.centerRight,
+                                    //       margin: EdgeInsets.only(right: 5),
+                                    //       child: Icon(
+                                    //         Icons.arrow_forward_ios_outlined,
+                                    //         color: Colors.grey,
+                                    //         size: 30,
+                                    //       ),
+                                    //     ),
+                                    // ),
 
 
-                        ]
-                      ),
+                            ]
+                          ),
 
-                    )
-                  ],
-                )
-                // Center(
-                //   child: Text(
-                //     id!  + " " + flightData.originDestination + " " + flightData.date + " " + flightData.time + " " + flightData.peopleInChat.toString(),
-                //     style: TextStyle(
-                //       fontWeight: FontWeight.w500,
-                //       color: Colors.orange,
-                //     ),
-                //   ),
-                // ),
-                );
+                        )
+                      ],
+                    ),
+                  )
+                  ),
+            );
           } else
             return SizedBox();
         });
-    // return Card(
-    //   elevation: 20,
-    //   child: Center(
-    //     child: Text(
-    //       id! + " " + flightData.originDestination + " " + flightData.date + " " + flightData.time,
-    //       style: TextStyle(
-    //         fontWeight: FontWeight.w500,
-    //         color: Colors.orange,
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   String date(DateTime tm) {
@@ -209,7 +195,7 @@ class FlightCard extends StatelessWidget {
         month = constants.DECEMBER;
         break;
     }
-    return tm.day.toString() + " " + month;
+    return tm.day.toString() + " " + month + " " + tm.year.toString() + " в ";
   }
 
   String howManyHumans(int num){

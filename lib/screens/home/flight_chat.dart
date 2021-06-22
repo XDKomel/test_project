@@ -9,28 +9,30 @@ import 'package:plane_chat/shared/constants.dart' as constants;
 class FlightChat extends StatefulWidget {
   final String streamId;
   final String display_id;
-  FlightChat({required this.streamId, required this.display_id});
+  final Timestamp time;
+  FlightChat({required this.streamId, required this.display_id, required this.time});
 
   @override
-  _FlightChatState createState() => _FlightChatState(streamId: streamId, display_id: display_id);
+  _FlightChatState createState() => _FlightChatState(streamId: streamId, display_id: display_id, time: time);
 }
 
 class _FlightChatState extends State<FlightChat> {
   final String streamId;
   final String display_id;
+  final Timestamp time;
   bool joined = true;
 
   List<String> initBanUsers = [];
   List<String> initBanMessage = [];
   int num_of_people=0;
 
-  _FlightChatState({required this.streamId, required this.display_id});
+  _FlightChatState({required this.streamId, required this.display_id, required this.time});
   void queryBanUsers() async {
     FirebaseFirestore.instance.collection('streams')
-        .doc(streamId)
+        .doc(streamId).collection('flights').doc(time.seconds.toString())
         .collection('blacklist')
         .doc('local').collection('users')
-        .doc(SessionKeeper.user.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('banned_users').snapshots().listen((snapshot) {
       snapshot.docs.forEach((element) {
         initBanUsers.add(element.get('uid'));
@@ -39,10 +41,10 @@ class _FlightChatState extends State<FlightChat> {
   }
   void queryBanMessages() async {
     FirebaseFirestore.instance.collection('streams')
-        .doc(streamId)
+        .doc(streamId).collection('flights').doc(time.seconds.toString())
         .collection('blacklist')
         .doc('local').collection('users')
-        .doc(SessionKeeper.user.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('messages').snapshots().listen((snapshot) {
       snapshot.docs.forEach((element) {
         initBanMessage.add(element.get('uid'));
@@ -51,7 +53,7 @@ class _FlightChatState extends State<FlightChat> {
   }
 
   Future<int> getNumOfPeople() async {
-    DocumentReference documentReference =FirebaseFirestore.instance.collection('flights').doc(streamId);
+    DocumentReference documentReference =FirebaseFirestore.instance.collection('flights').doc(streamId).collection('flights').doc(time.seconds.toString());
     int num=0;
     await documentReference.get().then((snapshot) {
       num = snapshot.get('peopleInChat');
@@ -59,9 +61,9 @@ class _FlightChatState extends State<FlightChat> {
     return num;
   }
   void queryJoinStatus() async {
-    await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection("flights").doc(streamId).get().then((doc) {
+    await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection("flights").doc(time.seconds.toString()).get().then((doc) {
       setState(() {
-        if(doc.exists) joined = true;
+        if(doc.exists && doc.get('id')==streamId) joined = true;
         else joined = false;
       });
     });
@@ -83,7 +85,7 @@ class _FlightChatState extends State<FlightChat> {
     queryJoinStatus();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(constants.APPBAR_SIZE),
         child: AppBar(
@@ -104,7 +106,7 @@ class _FlightChatState extends State<FlightChat> {
               ],
             )
           ),
-          backgroundColor: constants.accentColor,
+          backgroundColor: Color.fromARGB(255, 82, 131, 183),
           elevation: 0.0,
           leadingWidth: 30,
           leading: Container(
@@ -128,7 +130,7 @@ class _FlightChatState extends State<FlightChat> {
                   );
                 },
                 label: Icon(
-                  Icons.person,
+                  Icons.person_outline,
                   color: Colors.white,
                   size: 30,
                 ),
@@ -139,13 +141,26 @@ class _FlightChatState extends State<FlightChat> {
           ],
         ),
       ),
-      body: CommentField(
-        onPeopleChanged: onPeopleChanged,
-        streamId: streamId,
-        display_id: display_id,
-        initBanMessage: initBanMessage,
-        initBanUsers: initBanUsers,
-        joined: joined,
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: constants.gradientStart,
+              end: constants.gradientEnd,
+              colors: [
+                constants.gradientBeginColor,
+                constants.gradientBeginColor,
+                constants.gradientEndColor,
+              ],
+            )),
+        child: CommentField(
+          onPeopleChanged: onPeopleChanged,
+          streamId: streamId,
+          display_id: display_id,
+          initBanMessage: initBanMessage,
+          initBanUsers: initBanUsers,
+          joined: joined,
+          time: time,
+        ),
       ),
     );
   }

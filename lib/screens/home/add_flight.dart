@@ -17,6 +17,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
+import 'choose_flight.dart';
+
 class AddFlight extends StatefulWidget {
   @override
   _AddFlightState createState() => _AddFlightState();
@@ -34,7 +36,8 @@ class _AddFlightState extends State<AddFlight> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
+    return loading? Loading() : Scaffold(
+      extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(constants.APPBAR_SIZE),
@@ -43,12 +46,12 @@ class _AddFlightState extends State<AddFlight> {
             '',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
           elevation: 0.0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: constants.accentColor,
+              color: Color(0xFF5283B7),
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -58,6 +61,16 @@ class _AddFlightState extends State<AddFlight> {
       ),
       backgroundColor: Colors.white,
       body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: constants.gradientStart,
+              end: constants.gradientEnd,
+              colors: [
+                constants.gradientBeginColor,
+                constants.gradientBeginColor,
+                constants.gradientEndColor,
+              ],
+            )),
         padding: EdgeInsets.only(top: size.height * 0.01),
         child: SizedBox(
           height: size.height,
@@ -68,11 +81,12 @@ class _AddFlightState extends State<AddFlight> {
               SizedBox(
                 height: 37,
               ),
+              Spacer(),
               Center(
                 child: Text(constants.TYPE_FLIGHT_ID.tr(),
                     style: TextStyle(
                       fontFamily: "Baloo",
-                      color: constants.accentColor,
+                      color: Colors.black,
                       fontSize: 30,
                       fontWeight: FontWeight.normal,
                     )),
@@ -81,19 +95,63 @@ class _AddFlightState extends State<AddFlight> {
                 height: 34,
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 23),
-                child: RoundedInputField(
-                  hintText: constants.FLIGHT_ID_EXAMPLE.tr(),
-                  keyboard: TextInputType.text,
-                  width: 0.85,
-                  maxHeight: 0.07,
-                  maxCharacters: 30,
-                  textAlign: TextAlign.center,
-                  onChanged: (flightId) {
-                    this.flightId = flightId.toUpperCase().replaceAll(new RegExp(r"\s+"), "");
-                  },
+                margin: EdgeInsets.only(left: 23, right: 23, bottom: 8),
+                child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient:  LinearGradient(
+                          begin: Alignment.bottomLeft,
+                          end: Alignment.topRight,
+                          colors: [Color.fromARGB(255, 255, 255, 255), Color.fromARGB(255, 224, 224, 224)],
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.4),
+                            spreadRadius: 2,
+                            blurRadius: 3,
+                            offset: Offset(0, 4), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              textAlign: TextAlign.start,
+
+                              textInputAction: TextInputAction.next,
+                              //textAlign: TextAlign.center,
+                              keyboardType: TextInputType.text,
+                              onChanged: (flightId) {
+                                this.flightId = flightId.toUpperCase().replaceAll(new RegExp(r"\s+"), "");
+                              },
+
+                              style: TextStyle(color: Colors.black),
+
+                              decoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey,
+                                  fontSize: 18,
+                                ),
+                                hintText: constants.FLIGHT_ID_EXAMPLE.tr(),
+                                border: InputBorder.none,
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    )
                 ),
               ),
+
               Spacer(),
               if (isError)
                 Align(
@@ -112,6 +170,11 @@ class _AddFlightState extends State<AddFlight> {
               Container(
                 margin: EdgeInsets.only(left: 23, right: 23, bottom: 21),
                 child: RoundedButton(
+                  gradient:  LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Color(0xFF5283B7), Color(0xFFB45590)],
+                  ),
                   text: constants.CONTINUE.tr(),
                   textColor: Colors.white,
                   textSize: 20,
@@ -123,93 +186,104 @@ class _AddFlightState extends State<AddFlight> {
                           .get()
                           .then((document) {
                         if (document.exists) {
-                          String reference = document.get('reference');
-                          if(reference.isNotEmpty){
-                            Navigator.push(
+
+                          if(document.data()!.containsKey('reference')){
+                            String reference = document.get('reference');
+
+
+
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FlightChat(
-                                    streamId: reference,
+                                  builder: (context) => ChooseFlight(
                                     display_id: flightId,
+                                    flightId: reference,
                                   )),
                             );
                           } else {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FlightChat(
-                                    streamId: flightId,
+                                  builder: (context) => ChooseFlight(
+                                    flightId: flightId,
                                     display_id: flightId,
                                   )),
                             );
                           }
 
                         } else {
-                          fetchFlight(flightId).then((obj) {
-                            if (!obj.error) {
-                              FirebaseFirestore.instance
-                                  .collection('flights')
-                                  .doc(obj.ident)
-                                  .get()
-                                  .then((value) {
-                                if (value.exists) {
-                                  FirebaseFirestore.instance
-                                      .collection('flights')
-                                      .doc(flightId).set({
-                                    'reference': obj.ident
-                                  });
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FlightChat(
-                                              streamId: obj.ident ?? flightId,
-                                          display_id: flightId,
-                                            )),
-                                  );
-                                } else {
-                                  FirebaseFirestore.instance
-                                      .collection('flights')
-                                      .doc(obj.ident)
-                                      .set({
-                                    'ident': obj.ident,
-                                    'aircrafttype': obj.aircrafttype,
-                                    'filed_ete': obj.filed_ete,
-                                    'filed_time': obj.filed_time,
-                                    'filed_departuretime': obj.filed_departuretime,
-                                    'filed_airspeed_kts': obj.filed_airspeed_kts,
-                                    'filed_airspeed_mach': obj.filed_airspeed_mach,
-                                    'filed_altitude': obj.filed_altitude,
-                                    'route': obj.route,
-                                    'actualdeparturetime': obj.actualdeparturetime,
-                                    'estimatedarrivaltime':
-                                    obj.estimatedarrivaltime,
-                                    'actualarrivaltime': obj.actualarrivaltime,
-                                    'diverted': obj.diverted,
-                                    'origin': obj.origin,
-                                    'originName': obj.originName,
-                                    'originCity': obj.originCity,
-                                    'destination': obj.destination,
-                                    'destinationName': obj.destinationName,
-                                    'destinationCity': obj.destinationCity,
-                                    'peopleInChat': 0
-                                  });
-                                  if(flightId != obj.ident){
+                          setState(() {
+                            loading = true;
+                          });
+                          fetchFlight(flightId).then((list) {
+                            if(list.length > 0){
+                                String? id = list[0].ident;
+                                FirebaseFirestore.instance
+                                    .collection('flights')
+                                    .doc(id)
+                                    .get()
+                                    .then((value) {
+                                  if (value.exists) {
                                     FirebaseFirestore.instance
                                         .collection('flights')
                                         .doc(flightId).set({
-                                      'reference': obj.ident
+                                      'reference': id
                                     });
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ChooseFlight(
+                                            flightId: id ?? flightId,
+                                            display_id: flightId,
+                                          )),
+                                    );
+                                  } else {
+                                    for(Flight obj in list){
+                                      FirebaseFirestore.instance
+                                        .collection('flights')
+                                        .doc(obj.ident).collection('flights').doc(obj.filed_departuretime!.seconds.toString())
+                                        .set({ //DO NOT SET JUST ADD NEW ITEMS
+                                      'ident': obj.ident,
+                                      'aircrafttype': obj.aircrafttype,
+                                      'filed_ete': obj.filed_ete,
+                                      'filed_time': obj.filed_time,
+                                      'filed_departuretime': obj.filed_departuretime,
+                                      'filed_airspeed_kts': obj.filed_airspeed_kts,
+                                      'filed_airspeed_mach': obj.filed_airspeed_mach,
+                                      'filed_altitude': obj.filed_altitude,
+                                      'route': obj.route,
+                                      'actualdeparturetime': obj.actualdeparturetime,
+                                      'estimatedarrivaltime':
+                                      obj.estimatedarrivaltime,
+                                      'actualarrivaltime': obj.actualarrivaltime,
+                                      'diverted': obj.diverted,
+                                      'origin': obj.origin,
+                                      'originName': obj.originName,
+                                      'originCity': obj.originCity,
+                                      'destination': obj.destination,
+                                      'destinationName': obj.destinationName,
+                                      'destinationCity': obj.destinationCity,
+                                      'peopleInChat': 0
+                                    });
+                                    if(flightId != obj.ident){
+                                      FirebaseFirestore.instance
+                                          .collection('flights')
+                                          .doc(flightId).set({
+                                        'reference': obj.ident
+                                      });
+                                    }
+
+                                    }
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ChooseFlight(
+                                            flightId: id ?? flightId,
+                                            display_id: flightId,
+                                          )),
+                                    );
                                   }
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FlightChat(
-                                          streamId: obj.ident ?? flightId,
-                                          display_id: flightId,
-                                        )),
-                                  );
-                                }
-                              });
+                                });
 
                             } else {
                               setState(() {
@@ -217,10 +291,8 @@ class _AddFlightState extends State<AddFlight> {
                                 isError = true;
                               });
                             }
-
-                            print(obj.toString());
                           });
-                          
+
                         }
                       });
                     } else {
@@ -239,7 +311,7 @@ class _AddFlightState extends State<AddFlight> {
     );
   }
 
-  Future<Flight> fetchFlight(String id) async {
+  Future<List<Flight>> fetchFlight(String id) async {
     var headers = {
       'authorization': 'Basic ' +
           base64Encode(utf8
@@ -249,8 +321,16 @@ class _AddFlightState extends State<AddFlight> {
         // Send authorization headers to the backend.
         headers: headers);
     final responseJson = jsonDecode(response.body);
+    List<Flight> list = [];
+    if (response.statusCode == 200) {
+      final data = responseJson['FlightInfoResult']['flights'];
+      print(data);
+      for (Map<String, dynamic> i in data) {
+        list.add(Flight.fromJson(i));
+      }
+    }
+      return list;
 
-    return Flight.fromJson(responseJson);
   }
 }
 
@@ -310,7 +390,7 @@ class Flight {
     if (json.containsKey('error'))
       return Flight(error: true);
     else
-      json = json['FlightInfoResult']['flights'][0];
+      //json = json['FlightInfoResult']['flights'][0];
     return Flight(
       error: false,
       ident: json['ident'],

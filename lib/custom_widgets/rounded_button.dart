@@ -10,12 +10,14 @@ class RoundedButton extends StatelessWidget {
   final double? textSize;
   final Color color, textColor;
   final bool borders;
+  final LinearGradient gradient;
 
   const RoundedButton({
     Key? key,
     this.text,
     this.press,
     this.textSize,
+    required this.gradient,
     this.color = constants.accentColor,
     this.textColor = Colors.white,
     this.borders = false,
@@ -27,13 +29,14 @@ class RoundedButton extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.only(bottom: 10),
-      width: (size.width > 300) ? 300 : size.width * 0.8,
+      width: size.width * 0.9,
       child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(60),
+            gradient: gradient,
+            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: constants.accentColor.withOpacity(0.2),
+                color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 2,
                 blurRadius: 3,
                 offset: Offset(0, 4), // changes position of shadow
@@ -41,14 +44,7 @@ class RoundedButton extends StatelessWidget {
             ],
           ),
           child: FlatButton(
-            shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: constants.accentColor,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(60.0)),
             padding: EdgeInsets.symmetric(vertical: 18, horizontal: 40),
-            color: color,
             onPressed: press,
             child: Text(
               text!,
