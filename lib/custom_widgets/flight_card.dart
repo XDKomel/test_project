@@ -39,7 +39,7 @@ class FlightCard extends StatelessWidget {
                 peopleInChat: data['peopleInChat'] ?? 0);
             return Container(
               child: Card(
-                  elevation: 5,
+                  elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ),

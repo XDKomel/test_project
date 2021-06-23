@@ -129,12 +129,12 @@ class _FlightChatState extends State<FlightChat> {
                     MaterialPageRoute(builder: (context) => Profile(uid: SessionKeeper.user.uid)),
                   );
                 },
-                label: Icon(
+                icon: Icon(
                   Icons.person_outline,
                   color: Colors.white,
                   size: 30,
                 ),
-                icon: Text(
+                label: Text(
                   constants.PROFILE,
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ))

@@ -38,6 +38,7 @@ class _ProfileState extends State<Profile> {
   String avatarUrl='';
 
   bool isMine = false;
+  bool isPicked = false;
   TextEditingController name_controller = TextEditingController();
   TextEditingController contact_controller = TextEditingController();
   TextEditingController description_controller = TextEditingController();
@@ -90,28 +91,36 @@ class _ProfileState extends State<Profile> {
       if (value.isNotEmpty)
         setState(() {
           name = value;
+          name_controller..text = name;
+          contact_controller..text = contact;
+          description_controller..text = description;
         });
     });
     getContact().then((value) async {
       if (value.isNotEmpty)
         setState(() {
           contact = value;
+          name_controller..text = name;
+          contact_controller..text = contact;
+          description_controller..text = description;
         });
     });
     getDescription().then((value) async {
       if (value.isNotEmpty)
         setState(() {
           description = value;
+          name_controller..text = name;
+          contact_controller..text = contact;
+          description_controller..text = description;
         });
     });
+
   }
   @override
   Widget build(BuildContext context) {
     isMine = uid == FirebaseAuth.instance.currentUser!.uid;
     Size size = MediaQuery.of(context).size;
-    name_controller..text = name;
-    contact_controller..text = contact;
-    description_controller..text = description;
+
 
     // final prefs = SharedPreferences.getInstance().then((value) {
     //   name = value.getString('name')!;
@@ -126,23 +135,22 @@ class _ProfileState extends State<Profile> {
         .then((value) => {
           avatarUrl = value
       });
-
     return Scaffold(
-        backgroundColor: Colors.white,
+      extendBodyBehindAppBar: true,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(constants.APPBAR_SIZE),
           child: AppBar(
             title: Text(
               constants.PROFILE,
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: Color(0xFF5283B7), fontSize: 20),
             ),
-            backgroundColor: constants.accentColor,
+            backgroundColor: Colors.transparent,
             elevation: 0.0,
             leadingWidth: 30,
             leading: Container(
               margin: EdgeInsets.only(left: 8),
               child: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
+                icon: Icon(Icons.arrow_back_ios, color: Color(0xFF5283B7),),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -152,6 +160,7 @@ class _ProfileState extends State<Profile> {
               Icon(
                 Icons.logout,
                 size: 30,
+                color: Color(0xFF5283B7),
               ),
               Container(
                 margin: EdgeInsets.only(left: 5),
@@ -166,7 +175,7 @@ class _ProfileState extends State<Profile> {
                     },
                     child: Text(
                       constants.LOG_OUT,
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      style: TextStyle(color: Color(0xFF5283B7), fontSize: 18),
                     )),
               )
             ],
@@ -194,7 +203,7 @@ class _ProfileState extends State<Profile> {
                         children: <Widget>[
                           // Spacer(),
                           SizedBox(
-                            height: 34,
+                            height: 34 + constants.APPBAR_SIZE,
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
@@ -204,9 +213,11 @@ class _ProfileState extends State<Profile> {
                                   radius: 70,
                                   child: Container(
                                     child: ClipOval(
-                                      child: avatarUrl.length>0? Image.network(avatarUrl,  height: 150,
+                                      child: avatarUrl.length>0? (isPicked? Image.file(_imageFile,height: 150,
                                         width: 150,
-                                        fit: BoxFit.cover,)
+                                        fit: BoxFit.cover,) : Image.network(avatarUrl,  height: 150,
+                                        width: 150,
+                                        fit: BoxFit.cover,))
                                           : Image.asset(
                                         'assets/images/person-icon-white.png',
                                         height: 150,
@@ -247,7 +258,7 @@ class _ProfileState extends State<Profile> {
                                         ),
 
                                         decoration: BoxDecoration(
-                                            color: Colors.deepOrange,
+                                            color: Color(0xFFB45590),
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(20))),
                                       ),
@@ -280,8 +291,7 @@ class _ProfileState extends State<Profile> {
                                         color: Colors.grey.withOpacity(0.4),
                                         spreadRadius: 2,
                                         blurRadius: 3,
-                                        offset: Offset(
-                                            0, 4), // changes position of shadow
+                                        offset: Offset(0, 4), // changes position of shadow
                                       ),
                                     ],
                                   ),
@@ -457,192 +467,6 @@ class _ProfileState extends State<Profile> {
                         ])))));
   }
 
-  Widget profileView() {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.fromLTRB(30, 50, 30, 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                height: 50,
-                width: 50,
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  size: 24,
-                  color: Colors.black54,
-                ),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black54),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-              ),
-              Text(
-                'Profiles details',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Container(height: 24, width: 24)
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
-          child: Stack(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 70,
-                child: ClipOval(
-                  child: Image.asset(
-                    'assets/images/image1.png',
-                    height: 150,
-                    width: 150,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Positioned(
-                  bottom: 1,
-                  right: 1,
-                  child: Container(
-                    height: 40,
-                    width: 40,
-                    child: Icon(
-                      Icons.add_a_photo,
-                      color: Colors.white,
-                    ),
-                    decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                  ))
-            ],
-          ),
-        ),
-        Expanded(
-            child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Color.fromRGBO(0, 41, 102, 1),
-                    constants.accentColor
-                  ])),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 25, 20, 4),
-                child: Container(
-                  height: 60,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        textAlign: TextAlign.start,
-                        textInputAction: TextInputAction.next,
-                        style: TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
-                          hintStyle: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey,
-                            fontSize: 18,
-                          ),
-                          hintText: 'Name',
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      border: Border.all(width: 1.0, color: Colors.white70)),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 4),
-                child: Container(
-                  height: 60,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Email',
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      border: Border.all(width: 1.0, color: Colors.white70)),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 4),
-                child: Container(
-                  height: 60,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Type something about yourself',
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      border: Border.all(width: 1.0, color: Colors.white70)),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 4),
-                child: Container(
-                  height: 60,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Phone number',
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      border: Border.all(width: 1.0, color: Colors.white70)),
-                ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: 70,
-                    width: 200,
-                    child: Align(
-                      child: Text(
-                        'Save',
-                        style: TextStyle(color: Colors.white70, fontSize: 20),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                        )),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ))
-      ],
-    );
-  }
 
   void pickImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -650,7 +474,7 @@ class _ProfileState extends State<Profile> {
     setState(() {
       _imageFile = File(pickedFile!.path);
       uploadImageToFirebase(context);
-
+      isPicked=true;
     });
   }
 

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:plane_chat/custom_widgets/rounded_button.dart';
 import 'package:plane_chat/models/UserData.dart';
 import 'package:plane_chat/screens/home/profile.dart';
 
@@ -732,60 +733,97 @@ class _CommentField extends State<CommentField> {
     Size size = MediaQuery
         .of(context)
         .size;
-    return Container(
-        margin: EdgeInsets.only(bottom: 5, left: 2, right: 2),
-        child: Row(children: [
-          Expanded(
-              child: SizedBox(
-                width: double.infinity,
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [Color(0xFF5283B7), Color(0xFFB45590)],
-                    ),
-                  ),
-                  constraints: BoxConstraints(minHeight: 50, maxHeight: 300),
-                  child: TextButton(
-                    onPressed: () async {
-                      // Timestamp date=Timestamp.fromDate(DateTime.now());
-                      // await FirebaseFirestore.instance.collection('flights').doc(streamId).get().then((doc) {
-                      //   date = doc.get('filed_departuretime');
-                      // });
-                      await FirebaseFirestore.instance.collection('users').doc(
-                          FirebaseAuth.instance.currentUser!.uid).collection(
-                          "flights").doc(time.seconds.toString()).set({
-                        'id': streamId,
-                        'display_id': display_id,
-                        'filed_departuretime': time
-                      });
-                      joined = true;
-                      widget.joined = true;
-                      await FirebaseFirestore.instance.collection('flights')
-                          .doc(streamId).collection('flights').doc(
-                          time.seconds.toString()).get()
-                          .then((doc) {
-                        int num = doc.get('peopleInChat') + 1;
-                        FirebaseFirestore.instance.collection('flights').doc(
-                            streamId).collection('flights').doc(
-                            time.seconds.toString()).update({
-                          'peopleInChat': num
-                        });
-                        onPeopleChanged(num);
-                      });
+    return   Container(
+      margin: EdgeInsets.only(left: 23, right: 23, bottom: 5),
+      child: RoundedButton(
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Color(0xFF5283B7), Color(0xFFB45590)],
+        ),
+        text: "Вступить в чат?",
+        textColor: Colors.white,
+        textSize: 16,
+        press: () async {
+          await FirebaseFirestore.instance.collection('users').doc(
+              FirebaseAuth.instance.currentUser!.uid).collection(
+              "flights").doc(time.seconds.toString()).set({
+            'id': streamId,
+            'display_id': display_id,
+            'filed_departuretime': time
+          });
+          joined = true;
+          widget.joined = true;
+          await FirebaseFirestore.instance.collection('flights')
+              .doc(streamId).collection('flights').doc(
+              time.seconds.toString()).get()
+              .then((doc) {
+            int num = doc.get('peopleInChat') + 1;
+            FirebaseFirestore.instance.collection('flights').doc(
+                streamId).collection('flights').doc(
+                time.seconds.toString()).update({
+              'peopleInChat': num
+            });
+            onPeopleChanged(num);
+          });
 
-                    },
-                    child: const Text('Вступить в чат?',
-                      style: TextStyle(fontSize: 20, color: Colors.white),),
-                  ),
+        },
+      ),
+    );
+    // return Container(
+    //     margin: EdgeInsets.only(bottom: 5, left: 2, right: 2),
+    //     child: Row(children: [
+    //       Expanded(
+    //           child: SizedBox(
+    //             width: double.infinity,
+    //             child: Container(
+    //               decoration: BoxDecoration(
+    //                   borderRadius: BorderRadius.all(Radius.circular(20)),
+    //                 gradient: LinearGradient(
+    //                   begin: Alignment.centerLeft,
+    //                   end: Alignment.centerRight,
+    //                   colors: [Color(0xFF5283B7), Color(0xFFB45590)],
+    //                 ),
+    //               ),
+    //               constraints: BoxConstraints(minHeight: 50, maxHeight: 300),
+    //               child: TextButton(
+    //                 onPressed: () async {
+    //                   // Timestamp date=Timestamp.fromDate(DateTime.now());
+    //                   // await FirebaseFirestore.instance.collection('flights').doc(streamId).get().then((doc) {
+    //                   //   date = doc.get('filed_departuretime');
+    //                   // });
+    //                   await FirebaseFirestore.instance.collection('users').doc(
+    //                       FirebaseAuth.instance.currentUser!.uid).collection(
+    //                       "flights").doc(time.seconds.toString()).set({
+    //                     'id': streamId,
+    //                     'display_id': display_id,
+    //                     'filed_departuretime': time
+    //                   });
+    //                   joined = true;
+    //                   widget.joined = true;
+    //                   await FirebaseFirestore.instance.collection('flights')
+    //                       .doc(streamId).collection('flights').doc(
+    //                       time.seconds.toString()).get()
+    //                       .then((doc) {
+    //                     int num = doc.get('peopleInChat') + 1;
+    //                     FirebaseFirestore.instance.collection('flights').doc(
+    //                         streamId).collection('flights').doc(
+    //                         time.seconds.toString()).update({
+    //                       'peopleInChat': num
+    //                     });
+    //                     onPeopleChanged(num);
+    //                   });
+    //
+    //                 },
+    //                 child: const Text('Вступить в чат?',
+    //                   style: TextStyle(fontSize: 20, color: Colors.white),),
+    //               ),
+    //
+    //             ),
+    //           )
+    //       ),
 
-                ),
-              )
-          ),
-
-        ]));
+    //    ]));
   }
 
   void onSendMessage(String content, int type) {
