@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:plane_chat/custom_widgets/gallery_widget.dart';
 import 'package:plane_chat/custom_widgets/rounded_button.dart';
 import 'package:plane_chat/custom_widgets/rounded_input_field.dart';
 import 'package:plane_chat/models/SessionKeeper.dart';
@@ -140,9 +141,14 @@ class _ProfileState extends State<Profile> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(constants.APPBAR_SIZE),
           child: AppBar(
-            title: Text(
-              constants.PROFILE,
-              style: TextStyle(color: Color(0xFF5283B7), fontSize: 20),
+            title: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                constants.PROFILE,
+                style: TextStyle(color: Color(0xFF5283B7), fontSize: 20),
+              ),
             ),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
@@ -247,6 +253,16 @@ class _ProfileState extends State<Profile> {
                                       onTap: (){
                                         setState(() {
                                           pickImage();
+                                          // showGalleryModal(context,
+                                          //     galleryType: GalleryType.SINGLE_CHOICE,
+                                          //     galleryTitle: 'profile_photo'.tr(),
+                                          //     cropType: CropType.CIRCLE)
+                                          //     .then((image) {
+                                          //   if (image != null) {
+                                          //     _imageFile=image;
+                                          //     uploadImageToFirebase(context);
+                                          //   }
+                                          // });
                                         });
                                       },
                                       child: Container(
@@ -312,7 +328,7 @@ class _ProfileState extends State<Profile> {
                                             this.name = name;
                                             // name_controller.text=name;
                                           },
-                                          enabled: isMine,
+                                          readOnly: !isMine,
 
                                           style: TextStyle(color: Colors.black),
 
@@ -331,7 +347,7 @@ class _ProfileState extends State<Profile> {
                                         ),
                                         TextFormField(
                                           textAlign: TextAlign.start,
-                                         enabled: isMine,
+                                         readOnly: !isMine,
                                           textInputAction: TextInputAction.next,
                                           // initialValue: contact,
                                           controller: contact_controller,
@@ -359,7 +375,7 @@ class _ProfileState extends State<Profile> {
                                         ),
                                         TextFormField(
                                           textAlign: TextAlign.start,
-                                          enabled: isMine,
+                                          readOnly: !isMine,
                                           textInputAction: TextInputAction.next,
                                           // initialValue: contact,
                                           controller: description_controller,

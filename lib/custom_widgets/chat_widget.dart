@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plane_chat/custom_widgets/rounded_button.dart';
@@ -373,9 +374,22 @@ class _CommentField extends State<CommentField> {
                                     alignment: Alignment.centerRight,
                                     child: ListView.builder(
                                       padding: EdgeInsets.all(10.0),
-                                      itemBuilder: (context, index) =>
-                                          buildItem(
-                                              index, messageList[index]),
+                                      itemBuilder: (context, index) {
+                                        String avatarUrl='';
+                                        // FirebaseStorage.instance
+                                        //     .ref()
+                                        //     .child('users')
+                                        //     .child(messageList[index].get('user_id') ?? "")
+                                        //     .child('avatar')
+                                        //     .getDownloadURL()
+                                        //     .then((value)  {
+                                        //   setState(() {
+                                        //     avatarUrl = value;
+                                        //   });
+                                        // });
+                                        return buildItem(
+                                            index, messageList[index], avatarUrl);
+                                      },
                                       itemCount: messageList.length,
                                       reverse: true,
                                       shrinkWrap: true,
@@ -394,8 +408,11 @@ class _CommentField extends State<CommentField> {
         ));
   }
 
-  Widget buildItem(int index, DocumentSnapshot document) {
+
+
+  Widget buildItem(int index, DocumentSnapshot document, String avatarUrl) {
     String uid = document.get('user_id') ?? "";
+
     String name = document.get('username') ?? "";
     Timestamp time = document.get('time');
     String messageId = uid + time.millisecondsSinceEpoch.toString();
@@ -428,7 +445,17 @@ class _CommentField extends State<CommentField> {
                   MaterialPageRoute(builder: (context) => Profile(uid: uid)),
                 );
               },
-              child: Container(
+              child: avatarUrl.length>0? CircleAvatar(
+                radius: 17.5,
+                child: ClipOval(
+                  child: Container(
+                    margin: EdgeInsets.only(right: 5),
+                    child: Image.network(avatarUrl,  height: 35,
+                    width: 35,
+                    fit: BoxFit.cover,),
+                  )
+                ),
+              ) : Container(
                 margin: EdgeInsets.only(right: 5),
                 width: 35,
                 height: 35,
@@ -440,7 +467,7 @@ class _CommentField extends State<CommentField> {
                   ),
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
-                  image: DecorationImage(
+                  image:  DecorationImage(
                       scale: 0.4,
                       image: ExactAssetImage('assets/images/person-icon-white.png'),
                       //[ExactAssetImage('android/assets/images/woman.png'),ExactAssetImage('android/assets/images/man.png'),ExactAssetImage('android/assets/images/woman2.png')][_random.nextInt(3)],
@@ -569,7 +596,7 @@ class _CommentField extends State<CommentField> {
                     // ),
                     Container(
                         child: Flexible(
-                            child: Text(
+                            child: SelectableText(
                               document.get('content'),
                               style: TextStyle(
                                   color: (uid != SessionKeeper.user.uid)

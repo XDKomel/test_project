@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:core/core.dart';
+// import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
@@ -84,7 +84,7 @@ class _GalleryWidgetState extends State<_GalleryWidget>
       assets = assets + recentAssets;
     }
     final isLastPage = assets.length < _pageSize;
-    List<ThumbnailItem> buffer = List.filled(assets.length, null);
+    List<ThumbnailItem> buffer = List.filled(assets.length, ThumbnailItem(file: File('')));
     for (int i = 0; i < _cachedFiles.length; i++) {
       buffer[i] = _cachedFiles[i];
     }
@@ -205,8 +205,8 @@ class _GalleryWidgetState extends State<_GalleryWidget>
                         backgroundColor: Theme.of(context).accentColor,
                         child: Icon(Icons.check),
                         onPressed: () {
-                          CoreModule.globalKey.currentState
-                              .pop(_chosenFiles.map((e) => e.file).toList());
+                          // CoreModule.globalKey.currentState
+                          //     .pop(_chosenFiles.map((e) => e.file).toList());
                         },
                       )
                     : null,
@@ -328,7 +328,7 @@ class _GalleryWidgetState extends State<_GalleryWidget>
                                               isChosen: _chosenFiles.contains(
                                                   _cachedFiles[index - 2]),
                                             )
-                                      : FutureBuilder<File>(
+                                      : FutureBuilder<File?>(
                                           future: asset.file,
                                           builder: (_, snapshot) {
                                             final file = snapshot.data;
@@ -354,7 +354,7 @@ class _GalleryWidgetState extends State<_GalleryWidget>
                                                           Radius.circular(0)),
                                                   child: Image(
                                                       image: AssetImage(
-                                                          "assets/images/img_placeholder.jpg",
+                                                          "assets/images/person-icon-white.png",
                                                           package: "core")));
                                             int assetIndex =
                                                 assets.indexOf(asset);
@@ -523,7 +523,7 @@ class _GalleryWidgetState extends State<_GalleryWidget>
             right: 8.0,
             child: InkWell(
               onTap: () {
-                if (!isChosen!) {
+                if (isChosen) {
                   _chosenFiles.add(thumbnailItem);
                 } else {
                   _chosenFiles.remove(thumbnailItem);
@@ -536,7 +536,7 @@ class _GalleryWidgetState extends State<_GalleryWidget>
                   height: MediaQuery.of(context).size.width * 0.067,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isChosen! ? Theme.of(context).accentColor : null,
+                      color: isChosen ? Theme.of(context).accentColor : null,
                       border: Border.all(width: 2, color: Colors.white)),
                   child: isChosen
                       ? Center(
@@ -608,7 +608,7 @@ class _GalleryWidgetState extends State<_GalleryWidget>
         }
         setState(() {});
       } else if (galleryType == GalleryType.SINGLE_CHOICE) {
-        CoreModule.globalKey.currentState.pop(croppedFile);
+        // CoreModule.globalKey.currentState.pop(croppedFile);
       }
     } else {
       if (galleryType == GalleryType.MULTIPLE_CHOICE) {
