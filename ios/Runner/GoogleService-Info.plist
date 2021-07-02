@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>768162024167-pkuesuqr67vhlfjc793ikebm70vikc0o.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.768162024167-pkuesuqr67vhlfjc793ikebm70vikc0o</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>768162024167-lefviunuq5686fp6lb2bp375q821jfen.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDtdOx_buiubGYB1MFPs23yrcpPraNYICU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>768162024167</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.lipsar.planeChat</string>
+	<key>PROJECT_ID</key>
+	<string>planechat-d8d2a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>planechat-d8d2a.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:768162024167:ios:e4da70c7ee349dfa2df042</string>
+</dict>
+</plist>

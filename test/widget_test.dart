@@ -8,7 +8,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+<<<<<<< HEAD
 import 'file:///C:/Users/Dmitriy/Desktop/flightBuddyRepo/flightbuddy/lib/main.dart';
+=======
+import 'package:plane_chat/main.dart';
+>>>>>>> 441a50dd9ad57a6d6916e20d224e8b3a6350db6d
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

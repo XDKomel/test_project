@@ -3,27 +3,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:plane_chat/models/user_data.dart';
 import 'package:plane_chat/screens/authentication/authenticate.dart';
 import 'package:plane_chat/screens/home/home.dart';
+import 'package:plane_chat/services/database.dart';
 
 class AuthService{
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  UserData? _userFromFirebaseUser(User? user){
-    return user!=null? UserData(uid: user.uid): null;
-  }
-  Stream<UserData?> get user {
-    return _auth.authStateChanges()
-        .map(_userFromFirebaseUser);
-  }
+  // UserData? _userFromFirebaseUser(User? user){
+  //   return user!=null? UserData(uid: user.uid): null;
+  // }
+  // Stream<UserData?> get user {
+  //   return _auth.authStateChanges()
+  //       .map(_userFromFirebaseUser);
+  // }
 
   Stream<User?> get authState => _auth.idTokenChanges();
 
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(String email, String password, String name) async {
     try{
      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
       User? user = result.user;
 
-      return _userFromFirebaseUser(user);
+      await DatabaseService(uid: user!.uid).updateUserData(name, email);
+
+      return user;
     }catch(e){
       print(e.toString());
       return null;
