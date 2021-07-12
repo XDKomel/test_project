@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:plane_chat/custom_widgets/rounded_button.dart';
 import 'package:plane_chat/custom_widgets/rounded_input_field.dart';
 import 'package:plane_chat/custom_widgets/rounded_password_field.dart';
@@ -84,15 +85,17 @@ class _AddFlightState extends State<AddFlight> {
               Spacer(),
               Center(
                 child: Text(constants.TYPE_FLIGHT_ID.tr(),
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: "Baloo",
                       color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.normal,
+                      fontSize: 32,
+
+                      fontWeight: FontWeight.w700,
                     )),
               ),
               SizedBox(
-                height: 34,
+                height: 35,
               ),
               Container(
                 margin: EdgeInsets.only(left: 23, right: 23, bottom: 8),
@@ -312,6 +315,30 @@ class _AddFlightState extends State<AddFlight> {
   }
 
   Future<List<Flight>> fetchFlight(String id) async {
+
+    String codes = await rootBundle.loadString('assets/images/codes.json');
+    print(id);
+    String basicId = id;
+    String codedId = "";
+    String initCode = id.substring(0,2);
+    String realCode = "";
+
+    Map<String,dynamic> codeMap  = json.decode(codes);
+    bool containsCode = codeMap.containsKey(initCode);
+    if(containsCode){
+      realCode = codeMap[initCode];
+      id = realCode+id.substring(2);
+      codedId = realCode+id.substring(2);
+    }else{
+      realCode = codeMap[initCode];
+
+      codedId = realCode+id.substring(2);
+    }
+
+    print(id);
+
+
+
     var headers = {
       'authorization': 'Basic ' +
           base64Encode(utf8
@@ -323,7 +350,19 @@ class _AddFlightState extends State<AddFlight> {
     final responseJson = jsonDecode(response.body);
     List<Flight> list = [];
     if (response.statusCode == 200) {
-      final data = responseJson['FlightInfoResult']['flights'];
+       var data;
+      if(responseJson['FlightInfoResult']!=null){
+       try{
+        data = responseJson['FlightInfoResult']['flights'];
+        print(data);
+       }catch(e){
+         if(containsCode){
+           final response = await http.get(Uri.parse(FlightAwareAPI.BASE_URL + basicId), headers: headers);
+           var responseJson2 = jsonDecode(response.body) ;
+           data = responseJson2['FlightInfoResult']['flights'];
+         }
+       }
+      }
       print(data);
       for (Map<String, dynamic> i in data) {
         list.add(Flight.fromJson(i));

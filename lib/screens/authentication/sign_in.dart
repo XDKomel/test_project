@@ -230,7 +230,7 @@ class _SignInState extends State<SignIn> {
                       // Spacer(),
 
                       Container(
-                        margin: EdgeInsets.only(left: 23, right: 23, bottom: 5),
+                        margin: EdgeInsets.only(left: 23, right: 23, bottom: 0,top: 10),
                         child: RoundedButton(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,

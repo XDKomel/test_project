@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
                 );
               },
               label: Container(
-                padding: EdgeInsets.only(right: 15),
+                padding: EdgeInsets.only(right: 5),
                 child: Text(
                   constants.PROFILE,
                   style: TextStyle(color: Color.fromARGB(255, 82, 131, 183), fontSize: 15),

@@ -56,12 +56,12 @@ class _FlightListState extends State<FlightList> {
                       Timestamp date = flightData['filed_departuretime'];
                        if (isBeforeNow(date) && flag){
                         flag = false;
-                        double top = index == 0? 72 : 0;
+                        double top = index == 0? 72 : 72;
                         return Column(children: [
                           Container(
                             alignment: Alignment.centerLeft,
                             margin:
-                            EdgeInsets.only(left: 16, bottom: 8, top: top),
+                            EdgeInsets.only(left: 16, bottom: 8, top: 72),
                             child: Text('Завершённые рейсы',
                                 style: TextStyle(
                                   fontFamily: "Baloo",
@@ -94,7 +94,7 @@ class _FlightListState extends State<FlightList> {
                            Container(
                              alignment: Alignment.centerLeft,
                              margin:
-                             EdgeInsets.only(left: 16, bottom: 8, top: 72),
+                             EdgeInsets.only(left: 8, bottom: 8, top: 120),
                              child: Text('Предстоящие рейсы',
                                  style: TextStyle(
                                    fontFamily: "Baloo",

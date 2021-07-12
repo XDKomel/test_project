@@ -146,17 +146,17 @@ class _ProfileState extends State<Profile> {
                 Navigator.pop(context);
               },
               child: Text(
-                constants.PROFILE,
-                style: TextStyle(color: Color(0xFF5283B7), fontSize: 20),
+                "Назад",
+                style: TextStyle(color: Color(0xFF5283B7), fontSize: 16),
               ),
             ),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            leadingWidth: 30,
+            leadingWidth: 20,
             leading: Container(
               margin: EdgeInsets.only(left: 8),
               child: IconButton(
-                icon: Icon(Icons.arrow_back_ios, color: Color(0xFF5283B7),),
+                icon: Icon(Icons.arrow_back_ios, color: Color(0xFF5283B7),size: 20,),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -165,11 +165,11 @@ class _ProfileState extends State<Profile> {
             actions: <Widget>[
               Icon(
                 Icons.logout,
-                size: 30,
+                size: 20,
                 color: Color(0xFF5283B7),
               ),
               Container(
-                margin: EdgeInsets.only(left: 5),
+                margin: EdgeInsets.only(left: 0),
                 child: TextButton(
                     onPressed: () async {
                       await _auth.signOut();
@@ -181,7 +181,7 @@ class _ProfileState extends State<Profile> {
                     },
                     child: Text(
                       constants.LOG_OUT,
-                      style: TextStyle(color: Color(0xFF5283B7), fontSize: 18),
+                      style: TextStyle(color: Color(0xFF5283B7), fontSize: 16),
                     )),
               )
             ],
