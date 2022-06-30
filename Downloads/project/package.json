@@ -1,0 +1,19 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sass": "node-sass -w styles/sass/ -o styles/css/ --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "-"
+  },
+  "author": "me",
+  "license": "ISC",
+  "dependencies": {
+    "@material/button": "^14.0.0",
+    "node-sass": "^7.0.1"
+  }
+}
